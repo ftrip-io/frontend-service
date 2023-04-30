@@ -7,7 +7,12 @@ type AreaFieldProps = {
   errorMessage?: any;
 };
 
-export const AreaField: FC<AreaFieldProps> = ({ label = "", rows = 3, formElement, errorMessage = "" }: any) => {
+export const AreaField: FC<AreaFieldProps> = ({
+  label = "",
+  rows = 3,
+  formElement,
+  errorMessage = "",
+}: any) => {
   const [localErrorMessage, setLocalErrorMessage] = useState("");
   if (localErrorMessage != errorMessage) {
     setLocalErrorMessage(errorMessage);
@@ -25,7 +30,11 @@ export const AreaField: FC<AreaFieldProps> = ({ label = "", rows = 3, formElemen
         rows={rows}
         {...formElement}
       />
-      {localErrorMessage ? <p className="font-medium mt-2 text-sm text-red-600">{localErrorMessage}</p> : <></>}
+      {localErrorMessage ? (
+        <p className="font-medium mt-2 text-sm text-red-600">{localErrorMessage}</p>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

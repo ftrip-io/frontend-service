@@ -1,5 +1,4 @@
 const isDeepEqual = (object1: any, object2: any) => {
-
   const objKeys1 = Object.keys(object1);
   const objKeys2 = Object.keys(object2);
 
@@ -11,9 +10,7 @@ const isDeepEqual = (object1: any, object2: any) => {
 
     const isObjects = isObject(value1) && isObject(value2);
 
-    if ((isObjects && !isDeepEqual(value1, value2)) ||
-      (!isObjects && value1 !== value2)
-    ) {
+    if ((isObjects && !isDeepEqual(value1, value2)) || (!isObjects && value1 !== value2)) {
       return false;
     }
   }
@@ -24,6 +21,4 @@ const isObject = (object: any) => {
   return object != null && typeof object === "object";
 };
 
-export {
-  isDeepEqual
-}
+export { isDeepEqual };

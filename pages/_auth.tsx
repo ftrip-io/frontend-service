@@ -14,7 +14,11 @@ type AuthComponentWrapperProps = {
   children: any;
 };
 
-export const AuthComponentWrapper: FC<AuthComponentWrapperProps> = ({ requireAuth, allowedRoles, children }) => {
+export const AuthComponentWrapper: FC<AuthComponentWrapperProps> = ({
+  requireAuth,
+  allowedRoles,
+  children,
+}) => {
   const isAuthorized = useIsAuthorized();
   const authorized = isAuthorized({ roles: allowedRoles });
   const router = useRouter();
