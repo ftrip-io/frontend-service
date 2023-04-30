@@ -15,7 +15,7 @@ type AuthenticatedUser = {
 };
 
 function authenticate(credentials: Credentials) {
-  return axios.post("/api/auth", credentials);
+  return axios.post("/userService/api/auth/authenticate", credentials);
 }
 
 export { credentialsSchema, authenticate };

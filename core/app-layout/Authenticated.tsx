@@ -11,7 +11,7 @@ let loggedUser: AuthUser | undefined;
 const userNavigation = [
   {
     name: "Your Profile",
-    onClick: async (router: NextRouter) => await router.push(`/users/${loggedUser?.username}`),
+    onClick: async (router: NextRouter) => await router.push(`/users/${loggedUser?.id}`),
   },
   { name: "Settings", onClick: async (router: NextRouter) => await router.push(`/settings`) },
   { name: "Sign out", onClick: async (router: NextRouter) => await router.push(`/logout`) },
@@ -111,7 +111,7 @@ export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
                     <div className="rounded-full">Profile Image</div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">
-                        {user?.name}
+                        {user?.firstName} {user?.lastName}
                       </div>
                       <div className="text-sm font-medium leading-none text-gray-400">
                         {user?.email}
