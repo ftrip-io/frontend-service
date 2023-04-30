@@ -9,7 +9,10 @@ import Image from "next/image";
 let loggedUser: AuthUser | undefined;
 
 const userNavigation = [
-  { name: "Your Profile", onClick: async (router: NextRouter) => await router.push(`/users/${loggedUser?.username}`) },
+  {
+    name: "Your Profile",
+    onClick: async (router: NextRouter) => await router.push(`/users/${loggedUser?.username}`),
+  },
   { name: "Settings", onClick: async (router: NextRouter) => await router.push(`/settings`) },
   { name: "Sign out", onClick: async (router: NextRouter) => await router.push(`/logout`) },
 ];
@@ -105,12 +108,14 @@ export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
               <Disclosure.Panel className="md:hidden">
                 <div className="border-t border-gray-700 pt-4 pb-3">
                   <div className="flex items-center px-5">
-                    <div className="rounded-full">
-                    Profile Image
-                    </div>
+                    <div className="rounded-full">Profile Image</div>
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">{user?.name}</div>
-                      <div className="text-sm font-medium leading-none text-gray-400">{user?.email}</div>
+                      <div className="text-base font-medium leading-none text-white">
+                        {user?.name}
+                      </div>
+                      <div className="text-sm font-medium leading-none text-gray-400">
+                        {user?.email}
+                      </div>
                     </div>
                   </div>
                   <div className="mt-3 space-y-1 px-2">

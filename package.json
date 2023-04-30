@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json}\"",
+    "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json}\""
   },
   "dependencies": {
     "@headlessui/react": "^1.7.7",
@@ -24,6 +26,7 @@
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.4",
     "next": "13.0.2",
+    "prettier": "^2.8.8",
     "prism-themes": "1.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
