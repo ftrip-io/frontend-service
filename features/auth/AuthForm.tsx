@@ -8,26 +8,35 @@ import { useAction } from "../../core/hooks/useAction";
 import { useNotifications } from "../../core/hooks/useNotifications";
 import { useZodValidatedFrom } from "../../core/hooks/useZodValidatedForm";
 import { extractErrorMessage } from "../../core/utils/errors";
-import { authenticate, type Credentials, type AuthenticatedUser, credentialsSchema } from "./authenticate";
+import {
+  authenticate,
+  type Credentials,
+  type AuthenticatedUser,
+  credentialsSchema,
+} from "./authenticate";
 
 export const AuthForm: FC = () => {
   const router = useRouter();
   const notifications = useNotifications();
-  const { setResult } = useResult('auth');
+  const { setResult } = useResult("auth");
   const { authDispatcher } = useAuthContext();
 
-  const { register: authForm, handleSubmit, formState: { errors } } = useZodValidatedFrom<Credentials>(credentialsSchema);
+  const {
+    register: authForm,
+    handleSubmit,
+    formState: { errors },
+  } = useZodValidatedFrom<Credentials>(credentialsSchema);
 
   const authenticateAction = useAction<Credentials, AuthenticatedUser>(authenticate, {
     onSuccess: (authUser: AuthenticatedUser) => {
       authDispatcher(onLogin(authUser));
-      setResult({ status: ResultStatus.Ok, type: 'AUTHENTICATE' });
-      router.push(`/users/${authUser.user.username}`)
+      setResult({ status: ResultStatus.Ok, type: "AUTHENTICATE" });
+      router.push(`/users/${authUser.user.username}`);
     },
     onError: (error: any) => {
       notifications.error(extractErrorMessage(error));
-      setResult({ status: ResultStatus.Error, type: 'AUTHENTICATE' });
-    }
+      setResult({ status: ResultStatus.Error, type: "AUTHENTICATE" });
+    },
   });
 
   return (
@@ -35,7 +44,6 @@ export const AuthForm: FC = () => {
       <div className="overflow-hidden shadow sm:rounded-md">
         <div className="bg-white px-4 py-5 sm:p-6">
           <div className="grid grid-cols-6 gap-6">
-
             <div className="col-span-6">
               <InputField
                 label="Username"
@@ -58,8 +66,7 @@ export const AuthForm: FC = () => {
         <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
           <Button>Login</Button>
         </div>
-
       </div>
     </form>
   );
-}
+};

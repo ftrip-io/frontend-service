@@ -6,7 +6,13 @@ type ConfirmationModalProps = ModalProps & {
   onYes: () => void;
 };
 
-export const ConfirmationModal: FC<ConfirmationModalProps> = ({ title, isOpen, onYes, onClose, children }) => {
+export const ConfirmationModal: FC<ConfirmationModalProps> = ({
+  title,
+  isOpen,
+  onYes,
+  onClose,
+  children,
+}) => {
   return (
     <>
       <Modal title={title} isOpen={isOpen} onClose={onClose}>

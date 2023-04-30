@@ -33,7 +33,11 @@ export const InputField: FC<InputFieldProps> = ({
         }
         {...formElement}
       />
-      {localErrorMessage ? <p className="font-medium mt-2 text-sm text-red-600">{localErrorMessage}</p> : <></>}
+      {localErrorMessage ? (
+        <p className="font-medium mt-2 text-sm text-red-600">{localErrorMessage}</p>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

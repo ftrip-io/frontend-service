@@ -13,9 +13,7 @@ type NestedLayoutChild = {
   component: FC<PropsWithChildren>;
 };
 
-const registeredLayouts: NestedLayout[] = [
-  
-];
+const registeredLayouts: NestedLayout[] = [];
 
 function match(path: string, routerPath: string, matchType: string) {
   const cleanedRouterPath = routerPath.replace("#", "");
