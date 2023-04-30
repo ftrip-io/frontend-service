@@ -46,7 +46,11 @@ export const SelectOptionField: FC<SelectOptionFieldProps> = ({
           </option>
         ))}
       </select>
-      {localErrorMessage ? <p className="font-medium mt-2 text-sm text-red-600">{localErrorMessage}</p> : <></>}
+      {localErrorMessage ? (
+        <p className="font-medium mt-2 text-sm text-red-600">{localErrorMessage}</p>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

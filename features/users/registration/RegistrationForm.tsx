@@ -92,7 +92,11 @@ export const RegistrationForm: FC = () => {
               </div>
 
               <div className="col-span-6">
-                <InputField label="City" formElement={registrationForm("city")} errorMessage={errors?.city?.message} />
+                <InputField
+                  label="City"
+                  formElement={registrationForm("city")}
+                  errorMessage={errors?.city?.message}
+                />
               </div>
 
               <div className="col-span-6">
