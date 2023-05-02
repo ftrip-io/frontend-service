@@ -13,15 +13,14 @@ export function removeToken() {
 }
 
 export function getUserIdFromToken() {
-  return decodeToken()?.id;
+  return decodeToken()?.unique_name;
 }
 
 export function getTypeFromToken() {
-  return decodeToken()?.type;
+  return decodeToken()?.role;
 }
 
 function decodeToken(): any {
   const token = getToken();
-
   return !!token ? jwt_decode(token) : null;
 }

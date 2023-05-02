@@ -13,14 +13,14 @@ import { getToken, getUserIdFromToken, removeToken, setToken } from "../utils/to
 
 export enum AuthUserType {
   None = -1,
-  Developer,
-  Admin,
+  Guest,
+  Host,
 }
 
 export type AuthUser = {
-  _id: string;
-  username: string;
-  name: string;
+  id: string;
+  firstName: string;
+  lastName: string;
   email: string;
   type: AuthUserType;
 };
@@ -97,7 +97,7 @@ export const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     axios
-      .get("/api/users/" + getUserIdFromToken())
+      .get("/userService/api/users/" + getUserIdFromToken())
       .then((response: any) => {
         const auth = { user: response.data as AuthUser, token: getToken() + "" };
         _authDispatcher(onLogin(auth));
