@@ -1,5 +1,6 @@
 import { type FC, type PropsWithChildren } from "react";
 import { useRouter } from "next/router";
+import SettingsLayout from "./settings/_settings.layout";
 
 type NestedLayout = {
   path: string;
@@ -13,7 +14,13 @@ type NestedLayoutChild = {
   component: FC<PropsWithChildren>;
 };
 
-const registeredLayouts: NestedLayout[] = [];
+const registeredLayouts: NestedLayout[] = [
+  {
+    path: "/settings",
+    pathMatch: "startsWith",
+    component: SettingsLayout,
+  },
+];
 
 function match(path: string, routerPath: string, matchType: string) {
   const cleanedRouterPath = routerPath.replace("#", "");
