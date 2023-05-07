@@ -15,6 +15,14 @@ const nextConfig = {
             : "http://localhost:4999"
         }/:path*`,
       },
+      {
+        source: "/notificationService/:path*",
+        destination: `${
+          process.env.API_PROXY_URL
+            ? process.env.API_PROXY_URL + "notificationService"
+            : "http://localhost:4998"
+        }/:path*`,
+      },
     ];
   },
 };

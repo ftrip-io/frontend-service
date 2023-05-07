@@ -11,6 +11,10 @@ const links: MenuItem[] = [
     title: "Change password",
     path: "/settings/password",
   },
+  {
+    title: "Notifications",
+    path: "/settings/notifications",
+  },
 ];
 
 export const SettingsLayout: FC<PropsWithChildren> = ({ children }) => {
