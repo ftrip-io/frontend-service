@@ -5,8 +5,11 @@ type ConfiguredNotificationTypes = {
 };
 
 function configureNotificationTypesForUser(userId: string) {
-  return (notifications: ConfiguredNotificationTypes) => {
-    return axios.put(`/notificationService/api/users/${userId}/notification-types`, notifications);
+  return (notificationTypes: ConfiguredNotificationTypes) => {
+    return axios.put(
+      `/notificationService/api/users/${userId}/notification-types`,
+      notificationTypes
+    );
   };
 }
 
