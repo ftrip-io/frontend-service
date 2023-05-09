@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import { type FC, useState, useCallback } from "react";
 
 type IntegerInputProps = {
   value: number;
@@ -14,17 +14,18 @@ export const IntegerInput: FC<IntegerInputProps> = ({
   max = Number.POSITIVE_INFINITY,
 }) => {
   const [inputValue, setInputValue] = useState(value);
-  const handleDecrementClick = () => {
+
+  const handleDecrementClick = useCallback(() => {
     const newValue = Math.max(min, inputValue - 1);
     setInputValue(newValue);
     onChange(newValue);
-  };
+  }, [inputValue, min, onChange]);
 
-  const handleIncrementClick = () => {
+  const handleIncrementClick = useCallback(() => {
     const newValue = Math.min(max, inputValue + 1);
     setInputValue(newValue);
     onChange(newValue);
-  };
+  }, [inputValue, max, onChange]);
 
   return (
     <div className="flex rounded-md overflow-hidden items-center text-center">

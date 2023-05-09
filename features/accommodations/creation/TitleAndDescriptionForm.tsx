@@ -1,5 +1,6 @@
 import { type FC } from "react";
 import { type CreateAccommodation } from "../createAccommodation";
+import { SimpleTextInput } from "../../../core/components/SimpleTextInput";
 
 type TitleAndDescriptionFormProps = {
   updateFields: (fields: Partial<CreateAccommodation>) => void;
@@ -14,10 +15,8 @@ export const TitleAndDescriptionForm: FC<TitleAndDescriptionFormProps> = ({
 }) => {
   return (
     <>
-      <label className="block text-lg font-medium text-gray-700 mt-5">Title</label>
-      <input
-        type="text"
-        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+      <SimpleTextInput
+        label="Title"
         value={title}
         onChange={(e) => updateFields({ title: e.target.value })}
         maxLength={50}

@@ -93,7 +93,7 @@ export const AccomodationMultiStepForm: FC = () => {
       updateFiles={setSelectedFiles}
       updateImagePreviews={setImagePreviews}
     />,
-    <AvailabilityForm key="Availability" />,
+    <AvailabilityForm key="Availability" updateFields={updateFields} {...data} />,
     <PricingForm key="Pricing" />,
     <HouseRulesForm key="House rules" />,
     <FinishForm key="Finish" />,
@@ -103,14 +103,13 @@ export const AccomodationMultiStepForm: FC = () => {
   const { setResult } = useResult("accommodations");
 
   const createAccommodationAction = useAction<CreateAccommodation>(createAccommodation, {
-    onSuccess: (a) => {
+    onSuccess: ({ id }) => {
       notifications.success("You have successfully created a new accommodation.");
       setResult({ status: ResultStatus.Ok, type: "CREATE_ACCOMMODATION" });
-      console.log(a);
       uploadFiles(
         selectedFiles,
         imagePreviews.map((io) => io.index),
-        a.id
+        id
       )
         .then(() => notifications.success("You have successfully uploaded photos."))
         .catch(() => notifications.error("Error while uploading photos."));
@@ -123,7 +122,6 @@ export const AccomodationMultiStepForm: FC = () => {
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
-    // console.log(data);
     if (!isLastStep) return next();
     createAccommodationAction(data);
   }

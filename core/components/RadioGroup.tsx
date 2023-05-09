@@ -1,4 +1,4 @@
-import { ChangeEvent, type FC } from "react";
+import { ChangeEvent, useCallback, type FC } from "react";
 
 type RadioOption = {
   value: string;
@@ -20,12 +20,15 @@ export const RadioGroup: FC<RadioGroupProps> = ({
   name,
   formElement,
 }) => {
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    if (newValue !== value) {
-      onChange(newValue);
-    }
-  };
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value;
+      if (newValue !== value) {
+        onChange(newValue);
+      }
+    },
+    [onChange, value]
+  );
 
   return (
     <>

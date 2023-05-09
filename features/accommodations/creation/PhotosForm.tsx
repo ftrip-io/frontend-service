@@ -36,7 +36,7 @@ export const PhotosForm: FC<PhotosFormProps> = ({
       setSelectedImage(undefined);
       return;
     }
-    let imageToMove = imagePreviews.splice(selectedImage, 1)[0];
+    const imageToMove = imagePreviews.splice(selectedImage, 1)[0];
     imagePreviews.splice(imagePreviews.indexOf(img), 0, imageToMove);
     setSelectedImage(undefined);
     updateImagePreviews(imagePreviews);

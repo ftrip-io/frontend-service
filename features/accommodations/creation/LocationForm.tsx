@@ -3,6 +3,7 @@ import { SelectOptionField } from "../../../core/components/SelectOptionField";
 import { countries } from "../useCountries";
 import { type CreateAccommodation } from "../createAccommodation";
 import { type Location } from "../AccommodationModels";
+import { SimpleTextInput } from "../../../core/components/SimpleTextInput";
 
 type LocationFormProps = {
   updateFields: (fields: Partial<CreateAccommodation>) => void;
@@ -29,41 +30,31 @@ export const LocationForm: FC<LocationFormProps> = ({ updateFields, location }) 
         }}
         value={location.country}
       />
-      <label className="block text-lg font-medium text-gray-700 mt-5">State</label>
-      <input
-        type="text"
-        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+      <SimpleTextInput
+        label="State"
         value={location.region}
         onChange={(e) => updateLocation({ region: e.target.value })}
       />
-      <label className="block text-lg font-medium text-gray-700 mt-5">City</label>
-      <input
-        type="text"
-        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+      <SimpleTextInput
+        label="City"
         value={location.city}
         onChange={(e) => updateLocation({ city: e.target.value })}
         required
       />
-      <label className="block text-lg font-medium text-gray-700 mt-5">Address</label>
-      <input
-        type="text"
-        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+      <SimpleTextInput
+        label="Address"
         value={location.address}
         onChange={(e) => updateLocation({ address: e.target.value })}
         required
       />
-      <label className="block text-lg font-medium text-gray-700 mt-5">Zip code</label>
-      <input
-        type="text"
-        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+      <SimpleTextInput
+        label="ZIP code"
         value={location.postalCode}
         onChange={(e) => updateLocation({ postalCode: e.target.value })}
         maxLength={10}
       />
-      <label className="block text-lg font-medium text-gray-700 mt-5">Apt, Suite, (optional)</label>
-      <input
-        type="text"
-        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+      <SimpleTextInput
+        label="Apt, Suite, (optional)"
         value={location.apt}
         onChange={(e) => updateLocation({ apt: e.target.value })}
       />

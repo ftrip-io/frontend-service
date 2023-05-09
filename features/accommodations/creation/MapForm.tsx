@@ -2,7 +2,7 @@ import { type FC, useMemo, useRef, useState } from "react";
 import { type CreateAccommodation } from "../createAccommodation";
 import { type Location } from "../AccommodationModels";
 import L from "leaflet";
-import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useLocation } from "../useLocation";
 import { Spinner } from "../../../core/components/Spinner";
@@ -73,7 +73,6 @@ const MapForm: FC<MapFormProps> = ({ updateFields, location }) => {
             setGeoData(l);
           }}
         />
-        {/* <Circle center={geoData} radius={100}></Circle> */}
       </MapContainer>
       <p>
         <input
