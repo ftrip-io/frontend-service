@@ -23,6 +23,22 @@ const nextConfig = {
             : "http://localhost:4998"
         }/:path*`,
       },
+      {
+        source: "/catalogService/:path*",
+        destination: `${
+          process.env.API_PROXY_URL
+            ? process.env.API_PROXY_URL + "catalogService"
+            : "http://localhost:4999"
+        }/:path*`,
+      },
+      {
+        source: "/photoService/:path*",
+        destination: `${
+          process.env.API_PROXY_URL
+            ? process.env.API_PROXY_URL + "photoService"
+            : "http://localhost:3001"
+        }/:path*`,
+      },
     ];
   },
 };
