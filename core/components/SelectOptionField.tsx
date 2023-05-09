@@ -8,11 +8,12 @@ export type Option = {
 type SelectOptionFieldProps = {
   label: string;
   value: any;
-  formElement: any;
+  formElement?: any;
   errorMessage?: any;
   disabled?: boolean;
   options: Option[];
   placeholder?: string;
+  onChange?: (value: any) => any;
 };
 
 export const SelectOptionField: FC<SelectOptionFieldProps> = ({
@@ -23,6 +24,7 @@ export const SelectOptionField: FC<SelectOptionFieldProps> = ({
   disabled = false,
   options = [],
   placeholder = "",
+  onChange = () => {},
 }) => {
   const [localErrorMessage, setLocalErrorMessage] = useState("");
   if (localErrorMessage != errorMessage) {
@@ -36,6 +38,7 @@ export const SelectOptionField: FC<SelectOptionFieldProps> = ({
         disabled={disabled ?? false}
         {...formElement}
         value={value}
+        onChange={(e) => onChange(e?.target?.value)}
         className={
           localErrorMessage
             ? "mt-1 block w-full rounded-md bg-red-50 border border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 text-sm"
