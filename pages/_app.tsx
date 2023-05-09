@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer, type ToastContainerProps } from "react-toastify";
 import { ResultContextProvider } from "../core/contexts/Result";
 import { AuthContextProvider } from "../core/contexts/Auth";
-import { AppLayout } from "../core/app-layout/App";
+import { AppLayout } from "../layouts/App";
 import { NestedLayoutResolver } from "./_layouting";
 import { AuthComponentWrapper, SecuredNextPage } from "./_auth";
 

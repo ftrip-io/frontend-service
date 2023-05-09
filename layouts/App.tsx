@@ -1,5 +1,5 @@
 import { type FC, type PropsWithChildren, useMemo } from "react";
-import { useAuthContext } from "../contexts/Auth";
+import { useAuthContext } from "../core/contexts/Auth";
 import { NotAuthenticatedLayout } from "./NotAuthenticated";
 import { AuthenticatedLayout } from "./Authenticated";
 
