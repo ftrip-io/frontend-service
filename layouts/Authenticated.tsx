@@ -1,13 +1,14 @@
-import { type FC, Fragment, type PropsWithChildren, useState, useEffect, useCallback } from "react";
+import { type FC, Fragment, type PropsWithChildren, useCallback } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { AuthUser, useAuthContext } from "../contexts/Auth";
+import { AuthUser, useAuthContext } from "../core/contexts/Auth";
 import Link from "next/link";
 import { type NextRouter, useRouter } from "next/router";
 import Image from "next/image";
-import axios from "axios";
-import { getUserIdFromToken } from "../utils/token";
-import { useResult } from "../contexts/Result";
+import { getUserIdFromToken } from "../core/utils/token";
+import { useNotificationsResult } from "../features/notifications/useNotificationsResult";
+import { useTNotificationsCount } from "../features/notifications/useNotificationsCount";
+import { useHoverable } from "../core/hooks/useHoverable";
 
 let loggedUser: AuthUser | undefined;
 
@@ -26,33 +27,12 @@ function classNames(...classes: any[]) {
 
 const NavigationButton = () => {
   const router = useRouter();
-  const [notificationsCount, setNotificationsCount] = useState(0);
-  const [isHover, setIsHover] = useState(false);
-  const { result } = useResult("notifications");
 
+  const { result } = useNotificationsResult();
+  const { notificationsCount } = useTNotificationsCount(getUserIdFromToken(), "false", [result]);
   const navigateToNotifications = useCallback(() => router.push("/notifications"), [router]);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    axios
-      .get(`/notificationService/api/users/${getUserIdFromToken()}/notifications/count?seen=false`)
-      .then((response: any) => {
-        setNotificationsCount(response.data || 0);
-      })
-      .catch(() => {});
-
-    return () => {
-      abortController.abort();
-    };
-  }, [result]);
-
-  const handleMouseEnter = useCallback(() => {
-    setIsHover(true);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setIsHover(false);
-  }, []);
+  const { isHover, hoverAttributes } = useHoverable();
 
   return (
     <>
@@ -60,8 +40,7 @@ const NavigationButton = () => {
         type="button"
         className="rounded-full p-1 bg-gray-800 hover:text-white"
         onClick={navigateToNotifications}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        {...hoverAttributes}
       >
         <span className="sr-only">View notifications</span>
         <svg

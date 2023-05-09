@@ -1,14 +1,13 @@
 import { useQuery } from "react-query";
 import type { User } from "../users/UserModels";
 import axios from "axios";
-import type { TNotification } from "./NotificationsModels";
 
-function useNotifications(userId: User["id"], seen: string, dependencies: any[] = []) {
+function useNotificationsCount(userId: User["id"], seen: string, dependencies: any[] = []) {
   const { data, isFetching, error } = useQuery(
-    [`notifications/${userId}?seen=${seen}`, ...dependencies],
+    [`notifications/${userId}/count?seen=${seen}`, ...dependencies],
     () =>
       axios.get(
-        `/notificationService/api/users/${userId}/notifications${
+        `/notificationService/api/users/${userId}/notifications/count${
           seen === "All" ? `` : `?seen=${seen}`
         }`
       ),
@@ -18,10 +17,10 @@ function useNotifications(userId: User["id"], seen: string, dependencies: any[] 
   );
 
   return {
-    notifications: data?.data as TNotification[],
+    notificationsCount: (data?.data as number) ?? 0,
     isLoading: isFetching,
     error: (error as any)?.response?.data,
   };
 }
 
-export { useNotifications as useTNotifications };
+export { useNotificationsCount as useTNotificationsCount };

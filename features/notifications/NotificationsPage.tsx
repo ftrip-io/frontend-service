@@ -1,6 +1,6 @@
 import { type FC, useCallback, useEffect, useState } from "react";
 import type { UserSpecificProfilePageProps } from "../../types";
-import { useNotifications } from "./useNotifications";
+import { useTNotifications } from "./useNotifications";
 import { NotificationsList } from "./NotificationsList";
 import { useNotificationsResult } from "./useNotificationsResult";
 import { NotificationsFilter } from "./NotificationsFilter";
@@ -14,7 +14,7 @@ export const NotificationsPage: FC<NotificationsPageProps> = ({ userId }) => {
   const { result, setResult } = useNotificationsResult();
 
   const [seen, setSeen] = useState(router.query?.seen?.toString() ?? "false");
-  const { notifications } = useNotifications(userId, seen, [result]);
+  const { notifications } = useTNotifications(userId, seen, [result]);
 
   const onSeenChange = useCallback(
     (newSeen: string) => {
