@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 
 export type Option = {
   value: any;
@@ -12,6 +12,7 @@ type SelectOptionFieldProps = {
   errorMessage?: any;
   disabled?: boolean;
   options: Option[];
+  placeholder?: string;
 };
 
 export const SelectOptionField: FC<SelectOptionFieldProps> = ({
@@ -21,6 +22,7 @@ export const SelectOptionField: FC<SelectOptionFieldProps> = ({
   errorMessage = "",
   disabled = false,
   options = [],
+  placeholder = "",
 }) => {
   const [localErrorMessage, setLocalErrorMessage] = useState("");
   if (localErrorMessage != errorMessage) {
@@ -40,6 +42,11 @@ export const SelectOptionField: FC<SelectOptionFieldProps> = ({
             : "mt-1 block w-full rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xl"
         }
       >
+        {placeholder && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        )}
         {options?.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
