@@ -1,6 +1,5 @@
-import { ChangeEvent, type FC } from "react";
+import { type FC } from "react";
 import { type Amenity } from "../AccommodationModels";
-import { Checkbox } from "../../../core/components/Checkbox";
 import { type AmenitiesList, type CreateAccommodation } from "../createAccommodation";
 
 type AmenitiesFormProps = {
@@ -17,21 +16,26 @@ export const AmenitiesForm: FC<AmenitiesFormProps> = ({
   return (
     <>
       {allAmenities?.map((a) => (
-        <Checkbox
-          label={a.name}
-          value={a.id}
-          checked={amenities.some((am) => am.amenityId === a.id)}
-          formElement={{
-            onChange: (e: ChangeEvent<HTMLInputElement>) => {
-              updateFields({
-                amenities: e.target.checked
-                  ? [...amenities, { amenityId: e.target.value, isPresent: true }]
-                  : amenities.filter((am) => am.amenityId !== a.id),
-              });
-            },
-          }}
-          key={a.id}
-        ></Checkbox>
+        <div className="flex space-x-2" key={a.id}>
+          <div>
+            <input
+              id={a.id}
+              type="checkbox"
+              value={a.id}
+              checked={amenities.some((am) => am.amenityId === a.id)}
+              onChange={(e) =>
+                updateFields({
+                  amenities: e.target.checked
+                    ? [...amenities, { amenityId: e.target.value, isPresent: true }]
+                    : amenities.filter((am) => am.amenityId !== a.id),
+                })
+              }
+            />
+          </div>
+          <label className="text-lg font-medium text-gray-700" htmlFor={a.id}>
+            {a.name}
+          </label>
+        </div>
       ))}
     </>
   );
