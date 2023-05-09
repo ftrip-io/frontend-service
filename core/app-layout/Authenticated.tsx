@@ -1,10 +1,13 @@
-import { type FC, Fragment, type PropsWithChildren } from "react";
+import { type FC, Fragment, type PropsWithChildren, useState, useEffect, useCallback } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AuthUser, useAuthContext } from "../contexts/Auth";
 import Link from "next/link";
 import { type NextRouter, useRouter } from "next/router";
 import Image from "next/image";
+import axios from "axios";
+import { getUserIdFromToken } from "../utils/token";
+import { useResult } from "../contexts/Result";
 
 let loggedUser: AuthUser | undefined;
 
@@ -20,6 +23,73 @@ const userNavigation = [
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
+
+const NavigationButton = () => {
+  const router = useRouter();
+  const [notificationsCount, setNotificationsCount] = useState(0);
+  const [isHover, setIsHover] = useState(false);
+  const { result } = useResult("notifications");
+
+  const navigateToNotifications = useCallback(() => router.push("/notifications"), [router]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    axios
+      .get(`/notificationService/api/users/${getUserIdFromToken()}/notifications/count?seen=false`)
+      .then((response: any) => {
+        setNotificationsCount(response.data || 0);
+      })
+      .catch(() => {});
+
+    return () => {
+      abortController.abort();
+    };
+  }, [result]);
+
+  const handleMouseEnter = useCallback(() => {
+    setIsHover(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHover(false);
+  }, []);
+
+  return (
+    <>
+      <button
+        type="button"
+        className="rounded-full p-1 bg-gray-800 hover:text-white"
+        onClick={navigateToNotifications}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <span className="sr-only">View notifications</span>
+        <svg
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          aria-hidden="true"
+          style={
+            notificationsCount && !isHover
+              ? {
+                  filter:
+                    "invert(13%) sepia(97%) saturate(7455%) hue-rotate(5deg) brightness(102%) contrast(103%)",
+                }
+              : {}
+          }
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+          />
+        </svg>
+      </button>
+    </>
+  );
+};
 
 export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -53,6 +123,8 @@ export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
+                      <NavigationButton />
+
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
                         <div>
@@ -92,6 +164,8 @@ export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
+                    <NavigationButton />
+
                     {/* Mobile menu button */}
                     <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open main menu</span>
