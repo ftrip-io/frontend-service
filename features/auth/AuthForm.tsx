@@ -14,12 +14,14 @@ import {
   type AuthenticatedUser,
   credentialsSchema,
 } from "./authenticate";
+import { useRtcContext } from "../rtc/Rtc";
 
 export const AuthForm: FC = () => {
   const router = useRouter();
   const notifications = useNotifications();
   const { setResult } = useResult("auth");
   const { authDispatcher } = useAuthContext();
+  const { tryToConnect } = useRtcContext();
 
   const {
     register: authForm,
@@ -30,6 +32,7 @@ export const AuthForm: FC = () => {
   const authenticateAction = useAction<Credentials, AuthenticatedUser>(authenticate, {
     onSuccess: (authUser: AuthenticatedUser) => {
       authDispatcher(onLogin(authUser));
+      tryToConnect();
       setResult({ status: ResultStatus.Ok, type: "AUTHENTICATE" });
       router.push(`/`);
     },
