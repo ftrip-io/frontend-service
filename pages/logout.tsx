@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { onLogout, useAuthContext } from "../core/contexts/Auth";
+import { useRtcContext } from "../features/rtc/Rtc";
 
 export default function Logout() {
   const { authDispatcher } = useAuthContext();
+  const { tryToDisconnect } = useRtcContext();
 
   useEffect(() => {
     authDispatcher(onLogout());
-  }, [authDispatcher]);
+    tryToDisconnect();
+  }, [authDispatcher, tryToDisconnect]);
 
   return (
     <>

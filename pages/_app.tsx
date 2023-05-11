@@ -10,6 +10,7 @@ import { NestedLayoutResolver } from "./_layouting";
 import { AuthComponentWrapper, SecuredNextPage } from "./_auth";
 
 import "react-toastify/dist/ReactToastify.css";
+import { RtcContextProvider } from "../features/rtc/Rtc";
 
 const toastrOptions: ToastContainerProps = {
   position: "top-center",
@@ -46,11 +47,13 @@ export default function App({ Component, pageProps }: CustomAppProps) {
         <ResultContextProvider>
           <AuthContextProvider>
             <AuthComponentWrapper {...Component}>
-              <AppLayout>
-                <NestedLayoutResolver>
-                  <Component {...pageProps} />
-                </NestedLayoutResolver>
-              </AppLayout>
+              <RtcContextProvider>
+                <AppLayout>
+                  <NestedLayoutResolver>
+                    <Component {...pageProps} />
+                  </NestedLayoutResolver>
+                </AppLayout>
+              </RtcContextProvider>
             </AuthComponentWrapper>
           </AuthContextProvider>
         </ResultContextProvider>

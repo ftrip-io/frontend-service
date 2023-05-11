@@ -39,6 +39,14 @@ const nextConfig = {
             : "http://localhost:3001"
         }/:path*`,
       },
+      {
+        source: "/rtcService/:path*",
+        destination: `${
+          process.env.API_PROXY_URL
+            ? process.env.API_PROXY_URL + "/rtcService"
+            : "http://localhost:4996"
+        }/:path*`,
+      },
     ];
   },
 };
