@@ -1,4 +1,4 @@
-import { ChangeEvent, type FC } from "react";
+import { type FC } from "react";
 import { PlaceType, type PropertyType } from "../AccommodationModels";
 import { SelectOptionField } from "../../../core/components/SelectOptionField";
 import { type CreateAccommodation } from "../createAccommodation";
@@ -21,21 +21,15 @@ export const PropertyForm: FC<PropertyFormProps> = ({
 }) => {
   return (
     <>
-      <h3 className="text-xl mb-10">What kind of place are you listing?</h3>
+      <h3 className="text-xl mb-6 font-semibold">What kind of place are you listing?</h3>
 
       <div className="mb-5">
         <SelectOptionField
           label="Choose a property type"
           placeholder="Select one"
-          options={allPropertyTypes?.map((pt) => ({
-            value: pt.id,
-            label: pt.name,
-          }))}
-          formElement={{
-            onChange: (e: ChangeEvent<HTMLInputElement>) =>
-              updateFields({ propertyTypeId: e.target.value }),
-            required: true,
-          }}
+          options={allPropertyTypes?.map((pt) => ({ value: pt.id, label: pt.name }))}
+          onChange={(value) => updateFields({ propertyTypeId: value })}
+          formElement={{ required: true }}
           value={propertyTypeId}
         />
       </div>
@@ -47,11 +41,8 @@ export const PropertyForm: FC<PropertyFormProps> = ({
             { value: PlaceType.PRIVATE_ROOM, label: "Private room" },
             { value: PlaceType.SHARED_ROOM, label: "Shared room" },
           ]}
-          formElement={{
-            onChange: (e: ChangeEvent<HTMLInputElement>) =>
-              updateFields({ placeType: +e.target.value }),
-            required: true,
-          }}
+          onChange={(value) => updateFields({ placeType: +value })}
+          formElement={{ required: true }}
           value={placeType}
         />
       </div>

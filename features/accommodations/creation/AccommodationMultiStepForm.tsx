@@ -10,6 +10,7 @@ import { AvailabilityForm } from "./AvailabilityForm";
 import { PricingForm } from "./PricingForm";
 import { HouseRulesForm } from "./HouseRulesForm";
 import { FinishForm } from "./FinishForm";
+import { CalendarForm } from "./CalendarForm";
 import { usePropertyTypes } from "../usePropertyTypes";
 import { useAmenities } from "../useAmenities";
 import { Button } from "../../../core/components/Button";
@@ -31,7 +32,7 @@ export const AccomodationMultiStepForm: FC = () => {
     bedroomCount: 0,
     bedCount: 0,
     bathroomCount: 0,
-    noticePeriod: 4,
+    noticePeriod: 1,
     bookingAdvancePeriod: 6,
     checkInFrom: 10,
     checkInTo: 20,
@@ -62,14 +63,12 @@ export const AccomodationMultiStepForm: FC = () => {
   const [imagePreviews, setImagePreviews] = useState<ImageOrder[]>([]);
 
   const { propertyTypes } = usePropertyTypes();
-  const { amenities } = useAmenities();
+  const { groupedAmenities } = useAmenities();
 
   function updateFields(fields: Partial<CreateAccommodation>) {
     setData((prev: any) => ({ ...prev, ...fields }));
   }
-  const MapWithNoSSR = dynamic(() => import("./MapForm"), {
-    ssr: false,
-  });
+  const MapWithNoSSR = dynamic(() => import("./MapForm"), { ssr: false });
   const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultistepForm([
     <PropertyForm
       key="Property"
@@ -78,11 +77,11 @@ export const AccomodationMultiStepForm: FC = () => {
       {...data}
     />,
     <RoomsForm key="Rooms" updateFields={updateFields} {...data} />,
-    <LocationForm key="Location" updateFields={updateFields} {...data} />,
-    <MapWithNoSSR key="Map" updateFields={updateFields} {...data} />,
+    <LocationForm key="Location 1/2" updateFields={updateFields} {...data} />,
+    <MapWithNoSSR key="Location 2/2" updateFields={updateFields} {...data} />,
     <AmenitiesForm
       key="Amenities"
-      allAmenities={amenities}
+      allAmenities={groupedAmenities}
       updateFields={updateFields}
       {...data}
     />,
@@ -93,9 +92,10 @@ export const AccomodationMultiStepForm: FC = () => {
       updateFiles={setSelectedFiles}
       updateImagePreviews={setImagePreviews}
     />,
-    <AvailabilityForm key="Availability" updateFields={updateFields} {...data} />,
-    <PricingForm key="Pricing" />,
-    <HouseRulesForm key="House rules" />,
+    <AvailabilityForm key="Availability 1/2" updateFields={updateFields} {...data} />,
+    <CalendarForm key="Availability 2/2" updateFields={updateFields} {...data} />,
+    <PricingForm key="Pricing" updateFields={updateFields} {...data} />,
+    <HouseRulesForm key="House rules" updateFields={updateFields} {...data} />,
     <FinishForm key="Finish" />,
   ]);
 
