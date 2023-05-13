@@ -20,8 +20,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-ENV BACKEND_URL=http://http-proxy:80/backend
-
 RUN npm run build
 
 # If using npm comment out above and use below instead
@@ -46,6 +44,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
-
 
 CMD ["node", "server.js"]

@@ -5,7 +5,7 @@ on:
       - master
 
 jobs:
-  setup:
+  release-and-publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -1,7 +1,10 @@
 name: Feature PR to Develop Workflow
 on:
   pull_request:
-    branches: [develop]
+    branches:
+      - develop
+      - master
+
 jobs:
   build:
     runs-on: ubuntu-latest
