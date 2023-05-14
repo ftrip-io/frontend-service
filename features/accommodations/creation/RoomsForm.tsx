@@ -21,6 +21,7 @@ export const RoomsForm: FC<RoomsFormProps> = ({
 }) => {
   return (
     <>
+      <h3 className="text-xl mb-6 font-semibold">How many guests can your place accommodate?</h3>
       <div className="grid grid-cols-2 gap-y-4">
         Min guests
         <IntegerInput

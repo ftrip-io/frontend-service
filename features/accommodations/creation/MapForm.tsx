@@ -60,9 +60,12 @@ const MapForm: FC<MapFormProps> = ({ updateFields, location }) => {
 
   return (
     <div>
-      {notFound
-        ? "The given location is not found. Go back and fix the location data"
-        : JSON.stringify(geoData)}
+      <h3 className="text-xl mb-6 font-semibold">Is the pin in the right place?</h3>
+      <p className="my-2">
+        {notFound
+          ? "The given location is not found. Go back and fix the location data"
+          : `${location.address}, ${location.city} ${location.postalCode}, ${location.region}, ${location.country}, (${geoData.lat}, ${geoData.lng})`}
+      </p>
       <MapContainer center={geoData} zoom={17} style={{ height: "50vh" }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <DraggableMarker
@@ -74,7 +77,7 @@ const MapForm: FC<MapFormProps> = ({ updateFields, location }) => {
           }}
         />
       </MapContainer>
-      <p>
+      <p className="my-2">
         <input
           type="radio"
           checked={saved}
