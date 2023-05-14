@@ -20,6 +20,7 @@ import { useNotifications } from "../../../core/hooks/useNotifications";
 import { ResultStatus, useResult } from "../../../core/contexts/Result";
 import { useAction } from "../../../core/hooks/useAction";
 import { extractErrorMessage } from "../../../core/utils/errors";
+import { useRouter } from "next/router";
 
 export const AccomodationMultiStepForm: FC = () => {
   const [data, setData] = useState<CreateAccommodation>({
@@ -101,6 +102,7 @@ export const AccomodationMultiStepForm: FC = () => {
 
   const notifications = useNotifications();
   const { setResult } = useResult("accommodations");
+  const router = useRouter();
 
   const createAccommodationAction = useAction<CreateAccommodation>(createAccommodation, {
     onSuccess: ({ id }) => {
@@ -113,6 +115,7 @@ export const AccomodationMultiStepForm: FC = () => {
       )
         .then(() => notifications.success("You have successfully uploaded photos."))
         .catch(() => notifications.error("Error while uploading photos."));
+      router.push("/");
     },
     onError: (error: any) => {
       notifications.error(extractErrorMessage(error));
@@ -123,6 +126,8 @@ export const AccomodationMultiStepForm: FC = () => {
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!isLastStep) return next();
+
+    data.priceDiffs.forEach((pd) => (pd.id = pd.id?.includes(".") ? undefined : pd.id));
     createAccommodationAction(data);
   }
 
