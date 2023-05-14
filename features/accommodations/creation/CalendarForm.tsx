@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { useState, type FC, useCallback } from "react";
 import Calendar from "react-calendar";
 import {
   type TileClassNameFunc,
@@ -96,11 +96,10 @@ export const CalendarForm: FC<CalendarFormProps> = ({
   availabilities,
 }) => {
   const [selectedRange, setSelectedRange] = useState<[Date, Date]>();
-  console.table(availabilities);
 
-  const tileDisabled: TileDisabledFunc = ({ date, view }) => {
+  const tileDisabled: TileDisabledFunc = useCallback(({ date, view }) => {
     return view === "month" && date < new Date();
-  };
+  }, []);
 
   const tileClassName: TileClassNameFunc = ({ date, view }) => {
     if (view !== "month") return;
