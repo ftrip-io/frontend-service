@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/Calendar.css";
 import Head from "next/head";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";

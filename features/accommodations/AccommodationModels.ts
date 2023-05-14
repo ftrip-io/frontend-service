@@ -71,11 +71,11 @@ export type AccommodationAmenity = {
 };
 
 export type Availability = {
-  id: string;
+  id?: string;
   fromDate: Date;
   toDate: Date;
   isAvailable: boolean;
-  accommodationId: string;
+  accommodationId?: string;
 };
 
 export type PriceDiff = {

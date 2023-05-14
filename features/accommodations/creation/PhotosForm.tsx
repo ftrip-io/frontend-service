@@ -49,27 +49,26 @@ export const PhotosForm: FC<PhotosFormProps> = ({
 
   return (
     <div>
+      <h3 className="text-xl mb-6 font-semibold">Liven up your listing with photos</h3>
       <div className="flex justify-center">
         <div className="max-w-2xl rounded-lg bg-gray-50 m-2">
-          <label className="flex flex-col w-full h-16 border-4 border-blue-200 border-dashed hover:bg-gray-100">
+          <label className="flex flex-col w-full h-16 border-4 border-blue-300 border-dashed hover:bg-gray-100">
             <div className="flex flex-col items-center justify-center cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-8 h-8 text-gray-400 group-hover:text-gray-600"
+                className="w-8 h-8 text-gray-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                 />
               </svg>
-              <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                Upload photos
-              </p>
+              <p className="pt-1 text-sm tracking-wider text-gray-500">Upload photos</p>
             </div>
             <input
               type="file"

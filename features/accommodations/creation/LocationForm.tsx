@@ -1,4 +1,4 @@
-import { ChangeEvent, type FC } from "react";
+import { type FC } from "react";
 import { SelectOptionField } from "../../../core/components/SelectOptionField";
 import { countries } from "../useCountries";
 import { type CreateAccommodation } from "../createAccommodation";
@@ -16,18 +16,13 @@ export const LocationForm: FC<LocationFormProps> = ({ updateFields, location }) 
 
   return (
     <>
+      <h3 className="text-xl mb-6 font-semibold">Where is your place located?</h3>
       <SelectOptionField
         label="Country"
         placeholder="Select one"
-        options={countries.map((c) => ({
-          value: c,
-          label: c,
-        }))}
-        formElement={{
-          onChange: (e: ChangeEvent<HTMLInputElement>) =>
-            updateLocation({ country: e.target.value }),
-          required: true,
-        }}
+        options={countries.map((c) => ({ value: c, label: c }))}
+        onChange={(value) => updateLocation({ country: value })}
+        formElement={{ required: true }}
         value={location.country}
       />
       <SimpleTextInput
