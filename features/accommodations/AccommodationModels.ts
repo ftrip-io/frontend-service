@@ -79,8 +79,8 @@ export type Availability = {
 };
 
 export type PriceDiff = {
-  id: string;
+  id?: string;
   when: string;
   percentage: number;
-  accommodationId: string;
+  accommodationId?: string;
 };
