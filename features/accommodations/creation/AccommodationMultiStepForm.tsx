@@ -126,8 +126,6 @@ export const AccomodationMultiStepForm: FC = () => {
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!isLastStep) return next();
-
-    data.priceDiffs.forEach((pd) => (pd.id = pd.id?.includes(".") ? undefined : pd.id));
     createAccommodationAction(data);
   }
 

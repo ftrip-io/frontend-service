@@ -18,19 +18,19 @@ type PricingFormProps = {
   priceDiffs: PriceDiff[];
 };
 
-const PriceDiffForm: FC<{ priceDiff: PriceDiff; onChange: () => void; onDelete: () => void }> = ({
-  priceDiff,
-  onChange,
-  onDelete,
-}) => {
+type PriceDiffFormProps = {
+  priceDiff: PriceDiff;
+  onChange: (priceDiff: PriceDiff) => void;
+  onDelete: () => void;
+};
+
+const PriceDiffForm: FC<PriceDiffFormProps> = ({ priceDiff, onChange, onDelete }) => {
   const [when, setWhen] = useState(parseCronExpression(priceDiff.when || "0 0 * * *"));
 
   const updateWhen = (field: "monthDays" | "months" | "weekDays", newValues: number[]) => {
-    let w = { ...when, [field]: newValues };
-    priceDiff.when = toCronExpression(w.monthDays, w.months, w.weekDays);
+    const w = { ...when, [field]: newValues };
     setWhen(w);
-    onChange();
-    console.log(priceDiff.when);
+    onChange({ ...priceDiff, when: toCronExpression(w.monthDays, w.months, w.weekDays) });
   };
 
   return (
@@ -81,10 +81,7 @@ const PriceDiffForm: FC<{ priceDiff: PriceDiff; onChange: () => void; onDelete: 
             type="number"
             className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
             value={priceDiff.percentage}
-            onChange={(e) => {
-              priceDiff.percentage = +e.target.value;
-              onChange();
-            }}
+            onChange={(e) => onChange({ ...priceDiff, percentage: +e.target.value })}
             required
             step={0.01}
           />
@@ -139,7 +136,10 @@ export const PricingForm: FC<PricingFormProps> = ({
       {priceDiffs.map((pd, i) => (
         <PriceDiffForm
           priceDiff={pd}
-          onChange={() => updateFields({ priceDiffs })}
+          onChange={(newPd) => {
+            priceDiffs.splice(i, 1, newPd);
+            updateFields({ priceDiffs });
+          }}
           onDelete={() => {
             priceDiffs.splice(i, 1);
             updateFields({ priceDiffs });
