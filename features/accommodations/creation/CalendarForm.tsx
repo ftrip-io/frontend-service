@@ -4,9 +4,10 @@ import {
   type TileClassNameFunc,
   type TileDisabledFunc,
 } from "react-calendar/dist/cjs/shared/types";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type CreateAccommodation } from "../accommodationActions";
 import { type Availability } from "../AccommodationModels";
 import { Button } from "../../../core/components/Button";
+import RadioGroup from "../../../core/components/RadioGroup";
 
 type CalendarFormProps = {
   updateFields: (fields: Partial<CreateAccommodation>) => void;
@@ -131,8 +132,8 @@ export const CalendarForm: FC<CalendarFormProps> = ({
 
   return (
     <>
-      <h3 className="text-xl mb-6 font-semibold">Set your availability</h3>
-      <div className="flex my-2">
+      <h3 className="text-xl mb-4 font-semibold">Set your availability</h3>
+      <div className="flex my-6">
         <div>
           <Calendar
             tileDisabled={tileDisabled}
@@ -155,6 +156,21 @@ export const CalendarForm: FC<CalendarFormProps> = ({
           </div>
         )}
       </div>
+      <h3 className="text-xl my-4 font-semibold">How far in advance can guests book?</h3>
+      <RadioGroup
+        options={[
+          { value: "0", label: "Any time" },
+          { value: "3", label: "3 months in advance" },
+          { value: "6", label: "6 months in advance" },
+          { value: "9", label: "9 months in advance" },
+          { value: "12", label: "1 year in advance" },
+          { value: "-1", label: "Dates unavailable by default" },
+        ]}
+        name="booking-advance-period"
+        value={bookingAdvancePeriod + ""}
+        onChange={(v) => updateFields({ bookingAdvancePeriod: +v })}
+        formElement={{ required: true }}
+      />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { useState, type FC } from "react";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type CreateAccommodation } from "../accommodationActions";
 import { type PriceDiff } from "../AccommodationModels";
 import { Button } from "../../../core/components/Button";
 import RadioGroup from "../../../core/components/RadioGroup";
@@ -41,6 +41,7 @@ const PriceDiffForm: FC<PriceDiffFormProps> = ({ priceDiff, onChange, onDelete }
           placeholder="Any month"
           options={monthOptions}
           isMulti={true}
+          isClearable={false}
           onChange={(newV) =>
             updateWhen(
               "months",
@@ -53,6 +54,7 @@ const PriceDiffForm: FC<PriceDiffFormProps> = ({ priceDiff, onChange, onDelete }
           placeholder="Any day of month"
           options={monthDayOptions}
           isMulti={true}
+          isClearable={false}
           onChange={(newV) =>
             updateWhen(
               "monthDays",
@@ -65,6 +67,7 @@ const PriceDiffForm: FC<PriceDiffFormProps> = ({ priceDiff, onChange, onDelete }
           placeholder="Any day of week"
           options={weekDayOptions}
           isMulti={true}
+          isClearable={false}
           onChange={(newV) =>
             updateWhen(
               "weekDays",

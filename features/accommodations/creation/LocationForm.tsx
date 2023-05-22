@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { SelectOptionField } from "../../../core/components/SelectOptionField";
 import { countries } from "../useCountries";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type CreateAccommodation } from "../accommodationActions";
 import { type Location } from "../AccommodationModels";
 import { SimpleTextInput } from "../../../core/components/SimpleTextInput";
 
