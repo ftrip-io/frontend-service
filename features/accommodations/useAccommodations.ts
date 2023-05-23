@@ -17,7 +17,7 @@ export function useAccommodation(
   );
 
   return {
-    accommodation: updated ?? convertDates(data?.data),
+    accommodation: convertDates(updated ?? data?.data),
     isLoading: isFetching,
     error: (error as any)?.response?.data,
   };

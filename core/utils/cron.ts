@@ -102,3 +102,13 @@ export const WEEKDAYS = [
   "Saturday",
   "Sunday",
 ] as const;
+
+export function toText(cron: string) {
+  const { monthDays, months, weekDays } = parseCronExpression(cron);
+  const formatter = new Intl.ListFormat();
+  return `${formatter.format(monthDays.map((d) => d + "."))} ${
+    monthDays.length > 0 ? "day of month;" : ""
+  } ${formatter.format(months.map((m) => MONTHS[m - 1]))} ${
+    months.length > 0 ? ";" : ""
+  } ${formatter.format(weekDays.map((d) => WEEKDAYS[d]))}`;
+}

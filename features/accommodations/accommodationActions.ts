@@ -13,7 +13,7 @@ export type ImageOrder = {
   name?: string;
 };
 
-export const uploadFiles = (files: File[], order: ImageOrder[], id: string) => {
+export function uploadFiles(files: File[], order: ImageOrder[], id: string) {
   const fd = new FormData();
   order.forEach((o) => {
     if (o.index !== undefined) fd.append("images", files[o.index], o.name || files[o.index].name);
@@ -21,11 +21,15 @@ export const uploadFiles = (files: File[], order: ImageOrder[], id: string) => {
   return axios.post(`/photoService/api/images/${id}`, fd, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-};
+}
 
-export const renameFiles = (files: { old: string; new?: string }[], id: string) => {
+export function renameFiles(files: { old: string; new?: string }[], id: string) {
   return axios.put(`/photoService/api/images/${id}`, files);
-};
+}
+
+export function deleteFolder(id: string) {
+  return axios.delete(`/photoService/api/images/${id}`);
+}
 
 export type AmenitiesList = {
   id?: string;
@@ -122,4 +126,8 @@ export type UpdateAccommodationPricing = {
 export function updateAccommodationPricing(id: string) {
   return (accommodationUpdate: UpdateAccommodationPricing) =>
     axios.put(`/catalogService/api/accommodations/${id}/pricing`, accommodationUpdate);
+}
+
+export function deleteAccommodation(id: string) {
+  return axios.delete(`/catalogService/api/accommodations/${id}`);
 }

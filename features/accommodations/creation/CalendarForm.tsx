@@ -18,6 +18,15 @@ type CalendarFormProps = {
 const AVAILABLE_CLASS = "react-calendar__tile--available" as const;
 const DISABLED_CLASS = "react-calendar__tile--disabled" as const;
 
+export const bookingAdvancePeriodLabels: { [v: string]: string } = {
+  "0": "Any time",
+  "3": "3 months in advance",
+  "6": "6 months in advance",
+  "9": "9 months in advance",
+  "12": "1 year in advance",
+  "-1": "Dates unavailable by default",
+} as const;
+
 const addAvailability = (
   start: Date,
   end: Date,
@@ -158,14 +167,10 @@ export const CalendarForm: FC<CalendarFormProps> = ({
       </div>
       <h3 className="text-xl my-4 font-semibold">How far in advance can guests book?</h3>
       <RadioGroup
-        options={[
-          { value: "0", label: "Any time" },
-          { value: "3", label: "3 months in advance" },
-          { value: "6", label: "6 months in advance" },
-          { value: "9", label: "9 months in advance" },
-          { value: "12", label: "1 year in advance" },
-          { value: "-1", label: "Dates unavailable by default" },
-        ]}
+        options={["0", "3", "6", "9", "12", "-1"].map((value) => ({
+          value,
+          label: bookingAdvancePeriodLabels[value],
+        }))}
         name="booking-advance-period"
         value={bookingAdvancePeriod + ""}
         onChange={(v) => updateFields({ bookingAdvancePeriod: +v })}
