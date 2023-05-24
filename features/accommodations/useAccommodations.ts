@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import axios from "axios";
 import { type Accommodation } from "./AccommodationModels";
+import moment from "moment";
 
 export function useAccommodation(
   accommodationId: Accommodation["id"],
@@ -26,8 +27,8 @@ export function useAccommodation(
 function convertDates(accommodation: Accommodation) {
   if (!accommodation) return;
   for (const a of accommodation.availabilities) {
-    if (typeof a.fromDate === "string") a.fromDate = new Date(a.fromDate);
-    if (typeof a.toDate === "string") a.toDate = new Date(a.toDate);
+    if (typeof a.fromDate === "string") a.fromDate = moment(a.fromDate).startOf("day").toDate();
+    if (typeof a.toDate === "string") a.toDate = moment(a.toDate).endOf("day").toDate();
   }
   return accommodation;
 }

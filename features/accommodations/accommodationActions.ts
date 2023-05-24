@@ -6,6 +6,7 @@ import {
   type PriceDiff,
   type Location,
 } from "./AccommodationModels";
+import moment from "moment";
 
 export type ImageOrder = {
   url: string;
@@ -43,7 +44,10 @@ export type CreateAccommodation = Omit<
 > & { amenities: AmenitiesList };
 
 export function createAccommodation(accommodation: CreateAccommodation) {
-  return axios.post("/catalogService/api/accommodations", accommodation);
+  return axios.post("/catalogService/api/accommodations", {
+    ...accommodation,
+    availabilities: formatDates(accommodation.availabilities),
+  });
 }
 
 export type UpdateAccommodation = {
@@ -114,7 +118,10 @@ export type UpdateAccommodationAvailabilities = {
 
 export function updateAccommodationAvailabilities(id: string) {
   return (accommodationUpdate: UpdateAccommodationAvailabilities) =>
-    axios.put(`/catalogService/api/accommodations/${id}/availabilities`, accommodationUpdate);
+    axios.put(`/catalogService/api/accommodations/${id}/availabilities`, {
+      ...accommodationUpdate,
+      availabilities: formatDates(accommodationUpdate.availabilities),
+    });
 }
 
 export type UpdateAccommodationPricing = {
@@ -130,4 +137,12 @@ export function updateAccommodationPricing(id: string) {
 
 export function deleteAccommodation(id: string) {
   return axios.delete(`/catalogService/api/accommodations/${id}`);
+}
+
+function formatDates(availabilities: Availability[]) {
+  return availabilities.map((aa) => ({
+    ...aa,
+    fromDate: moment(aa.fromDate).format("YYYY-MM-DD"),
+    toDate: moment(aa.toDate).format("YYYY-MM-DD"),
+  }));
 }
