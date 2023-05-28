@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Modal } from "../../../core/components/Modal";
 import dynamic from "next/dynamic";
 import { CalendarPreview } from "./CalendarPreview";
+import { BookingCard } from "./BookingCard";
 
 const MapPreview = dynamic(() => import("./MapPreview"), { ssr: false });
 
@@ -13,6 +14,7 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
   const { accommodation } = useAccommodation(id);
   const [openAmenities, setOpenAmenities] = useState(false);
   const [openPhotos, setOpenPhotos] = useState(false);
+  const [period, setPeriod] = useState<{ checkIn?: Date; checkOut?: Date }>();
 
   const CoverImage: FC<{ index: number; className?: string }> = ({ index, className = "" }) => (
     <Image
@@ -67,8 +69,8 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
         ))}
       </Modal>
 
-      <div className="flex">
-        <div className="w-2/3">
+      <div className="md:flex">
+        <div className="md:w-2/3">
           <div className="border-b-2 py-4">
             <h1 className="text-xl font-semibold mt-3">
               {["Entire place", "Private room", "Shared room"][accommodation.placeType]} hosted by{" "}
@@ -108,13 +110,14 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
             <CalendarPreview
               availabilities={accommodation.availabilities}
               bookingAdvancePeriod={accommodation.bookingAdvancePeriod}
+              minDays={accommodation.minNights}
+              maxDays={accommodation.maxNights}
+              onChange={(c) => setPeriod({ ...c })}
             />
           </div>
         </div>
-        <div className="w-1/3">
-          <div className="m-10 p-5 border-2 rounded-2xl">
-            <h2 className="text-xl">$ {accommodation.price} night</h2>
-          </div>
+        <div className="md:w-1/3">
+          <BookingCard {...period} {...accommodation} />
         </div>
       </div>
       <div className="border-b-2 py-4">

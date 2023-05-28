@@ -30,5 +30,6 @@ function convertDates(accommodation: Accommodation) {
     if (typeof a.fromDate === "string") a.fromDate = moment(a.fromDate).startOf("day").toDate();
     if (typeof a.toDate === "string") a.toDate = moment(a.toDate).endOf("day").toDate();
   }
+  accommodation.availabilities.sort((a1, a2) => a1.fromDate.getTime() - a2.fromDate.getTime());
   return accommodation;
 }
