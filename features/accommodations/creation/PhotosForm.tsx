@@ -1,33 +1,30 @@
+import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import Image from "next/image";
 import { ChangeEvent, type FC, useState } from "react";
-
-export type ImageOrder = {
-  url: string;
-  index: number;
-};
+import { type ImageOrder } from "../accommodationActions";
 
 type PhotosFormProps = {
   imagePreviews: ImageOrder[];
-  updateFiles: (files: any) => void;
-  updateImagePreviews: (images: ImageOrder[]) => void;
+  updateFiles: (files: File[]) => number;
+  setImagePreviews: (images: ImageOrder[]) => void;
 };
 
 export const PhotosForm: FC<PhotosFormProps> = ({
   imagePreviews,
   updateFiles,
-  updateImagePreviews,
+  setImagePreviews,
 }) => {
   const [selectedImage, setSelectedImage] = useState<number>();
 
   const selectFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    let images = [];
-    const files = event.target.files ?? [];
-    for (let i = 0; i < files.length; i++) {
-      images.push({ url: URL.createObjectURL(files[i]), index: i });
-    }
-    updateFiles(files);
-    updateImagePreviews(images);
+    const files = Array.from(event.target.files ?? []);
+    const n = updateFiles(files);
+    const i0 = n - files.length;
+    setImagePreviews([
+      ...imagePreviews,
+      ...files.map((file, i) => ({ url: URL.createObjectURL(file), index: i0 + i })),
+    ]);
   };
 
   const moveBefore = (img: ImageOrder) => {
@@ -39,12 +36,12 @@ export const PhotosForm: FC<PhotosFormProps> = ({
     const imageToMove = imagePreviews.splice(selectedImage, 1)[0];
     imagePreviews.splice(imagePreviews.indexOf(img), 0, imageToMove);
     setSelectedImage(undefined);
-    updateImagePreviews(imagePreviews);
+    setImagePreviews(imagePreviews);
   };
 
   const deleteImage = (img: ImageOrder) => {
     setSelectedImage(undefined);
-    updateImagePreviews(imagePreviews.filter((io) => io !== img));
+    setImagePreviews(imagePreviews.filter((io) => io !== img));
   };
 
   return (
@@ -54,20 +51,7 @@ export const PhotosForm: FC<PhotosFormProps> = ({
         <div className="max-w-2xl rounded-lg bg-gray-50 m-2">
           <label className="flex flex-col w-full h-16 border-4 border-blue-300 border-dashed hover:bg-gray-100">
             <div className="flex flex-col items-center justify-center cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-8 h-8 text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                />
-              </svg>
+              <CloudArrowUpIcon className="w-8 h-8 text-gray-500" />
               <p className="pt-1 text-sm tracking-wider text-gray-500">Upload photos</p>
             </div>
             <input
@@ -82,10 +66,10 @@ export const PhotosForm: FC<PhotosFormProps> = ({
       </div>
 
       {imagePreviews && (
-        <div className="grid grid-cols-3">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3">
           {imagePreviews.map((img, i) => (
             <div
-              key={img.index}
+              key={img.url}
               className={`w-full items-center flex relative ${
                 selectedImage === i ? "bg-blue-400" : ""
               }`}

@@ -1,5 +1,5 @@
-import { type FC, useMemo, useRef, useState } from "react";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type FC, useMemo, useRef, useState, useEffect } from "react";
+import { type CreateAccommodation } from "../accommodationActions";
 import { type Location } from "../AccommodationModels";
 import L from "leaflet";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
@@ -56,27 +56,37 @@ const MapForm: FC<MapFormProps> = ({ updateFields, location }) => {
     (d) => d && setGeoData(new L.LatLng(d.lat, d.lon)),
     [location.saved]
   );
-  if (isLoading) return <Spinner />;
+
+  useEffect(() => {
+    setGeoData(new L.LatLng(location.latitude, location.longitude));
+    setSaved(location.saved);
+  }, [location]);
 
   return (
     <div>
       <h3 className="text-xl mb-6 font-semibold">Is the pin in the right place?</h3>
-      <p className="my-2">
-        {notFound
-          ? "The given location is not found. Go back and fix the location data"
-          : `${location.address}, ${location.city} ${location.postalCode}, ${location.region}, ${location.country}, (${geoData.lat}, ${geoData.lng})`}
-      </p>
-      <MapContainer center={geoData} zoom={17} style={{ height: "50vh" }}>
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <DraggableMarker
-          center={geoData}
-          r={100}
-          setLocation={(l) => {
-            setSaved(false);
-            setGeoData(l);
-          }}
-        />
-      </MapContainer>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div>
+          <p className="my-2">
+            {notFound
+              ? "The given location is not found. Go back and fix the location data"
+              : `${location.address}, ${location.city} ${location.postalCode}, ${location.region}, ${location.country}, (${geoData.lat}, ${geoData.lng})`}
+          </p>
+          <MapContainer center={geoData} zoom={17} style={{ height: "50vh" }}>
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <DraggableMarker
+              center={geoData}
+              r={100}
+              setLocation={(l) => {
+                setSaved(false);
+                setGeoData(l);
+              }}
+            />
+          </MapContainer>
+        </div>
+      )}
       <p className="my-2">
         <input
           type="radio"
@@ -89,6 +99,7 @@ const MapForm: FC<MapFormProps> = ({ updateFields, location }) => {
           className="cursor-pointer"
           name="saved"
           required
+          disabled={isLoading}
         />
         <span className="ml-2">This is the right location</span>
       </p>

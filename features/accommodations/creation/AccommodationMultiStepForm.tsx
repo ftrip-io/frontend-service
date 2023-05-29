@@ -5,7 +5,7 @@ import { PropertyForm } from "./PropertyForm";
 import { RoomsForm } from "./RoomsForm";
 import { LocationForm } from "./LocationForm";
 import { TitleAndDescriptionForm } from "./TitleAndDescriptionForm";
-import { type ImageOrder, PhotosForm } from "./PhotosForm";
+import { PhotosForm } from "./PhotosForm";
 import { AvailabilityForm } from "./AvailabilityForm";
 import { PricingForm } from "./PricingForm";
 import { HouseRulesForm } from "./HouseRulesForm";
@@ -14,13 +14,21 @@ import { CalendarForm } from "./CalendarForm";
 import { usePropertyTypes } from "../usePropertyTypes";
 import { useAmenities } from "../useAmenities";
 import { Button } from "../../../core/components/Button";
-import { type CreateAccommodation, createAccommodation, uploadFiles } from "../createAccommodation";
+import {
+  type CreateAccommodation,
+  createAccommodation,
+  uploadFiles,
+  type ImageOrder,
+} from "../accommodationActions";
 import dynamic from "next/dynamic";
 import { useNotifications } from "../../../core/hooks/useNotifications";
 import { ResultStatus, useResult } from "../../../core/contexts/Result";
 import { useAction } from "../../../core/hooks/useAction";
 import { extractErrorMessage } from "../../../core/utils/errors";
 import { useRouter } from "next/router";
+import { Accommodation } from "../AccommodationModels";
+
+const MapForm = dynamic(() => import("./MapForm"), { ssr: false });
 
 export const AccomodationMultiStepForm: FC = () => {
   const [data, setData] = useState<CreateAccommodation>({
@@ -60,7 +68,7 @@ export const AccomodationMultiStepForm: FC = () => {
     availabilities: [],
     priceDiffs: [],
   });
-  const [selectedFiles, setSelectedFiles] = useState<any>();
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<ImageOrder[]>([]);
 
   const { propertyTypes } = usePropertyTypes();
@@ -69,7 +77,13 @@ export const AccomodationMultiStepForm: FC = () => {
   function updateFields(fields: Partial<CreateAccommodation>) {
     setData((prev: any) => ({ ...prev, ...fields }));
   }
-  const MapWithNoSSR = dynamic(() => import("./MapForm"), { ssr: false });
+
+  function updateFiles(files: File[]) {
+    const allFiles = [...selectedFiles, ...files];
+    setSelectedFiles(allFiles);
+    return allFiles.length;
+  }
+
   const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultistepForm([
     <PropertyForm
       key="Property"
@@ -79,7 +93,7 @@ export const AccomodationMultiStepForm: FC = () => {
     />,
     <RoomsForm key="Rooms" updateFields={updateFields} {...data} />,
     <LocationForm key="Location 1/2" updateFields={updateFields} {...data} />,
-    <MapWithNoSSR key="Location 2/2" updateFields={updateFields} {...data} />,
+    <MapForm key="Location 2/2" updateFields={updateFields} {...data} />,
     <AmenitiesForm
       key="Amenities"
       allAmenities={groupedAmenities}
@@ -90,8 +104,8 @@ export const AccomodationMultiStepForm: FC = () => {
     <PhotosForm
       key="Photos"
       imagePreviews={imagePreviews}
-      updateFiles={setSelectedFiles}
-      updateImagePreviews={setImagePreviews}
+      updateFiles={updateFiles}
+      setImagePreviews={setImagePreviews}
     />,
     <AvailabilityForm key="Availability 1/2" updateFields={updateFields} {...data} />,
     <CalendarForm key="Availability 2/2" updateFields={updateFields} {...data} />,
@@ -104,24 +118,30 @@ export const AccomodationMultiStepForm: FC = () => {
   const { setResult } = useResult("accommodations");
   const router = useRouter();
 
-  const createAccommodationAction = useAction<CreateAccommodation>(createAccommodation, {
-    onSuccess: ({ id }) => {
-      notifications.success("You have successfully created a new accommodation.");
-      setResult({ status: ResultStatus.Ok, type: "CREATE_ACCOMMODATION" });
-      uploadFiles(
-        selectedFiles,
-        imagePreviews.map((io) => io.index),
-        id
-      )
-        .then(() => notifications.success("You have successfully uploaded photos."))
-        .catch(() => notifications.error("Error while uploading photos."));
-      router.push("/");
-    },
-    onError: (error: any) => {
-      notifications.error(extractErrorMessage(error));
-      setResult({ status: ResultStatus.Error, type: "CREATE_ACCOMMODATION" });
-    },
-  });
+  const createAccommodationAction = useAction<CreateAccommodation, Accommodation>(
+    createAccommodation,
+    {
+      onSuccess: ({ id }) => {
+        notifications.success("You have successfully created a new accommodation.");
+        setResult({ status: ResultStatus.Ok, type: "CREATE_ACCOMMODATION" });
+        imagePreviews.forEach((ip, i) => {
+          ip.name = `${("000" + i).slice(-3)}-${ip.url.split("/").at(-1)}.${selectedFiles[
+            ip.index ?? 0
+          ].type
+            .split("/")
+            .at(1)}`;
+        });
+        uploadFiles(selectedFiles, imagePreviews, id)
+          .then(() => notifications.success("You have successfully uploaded photos."))
+          .catch(() => notifications.error("Error while uploading photos."));
+        router.push(`/accommodations/${id}/edit`);
+      },
+      onError: (error: any) => {
+        notifications.error(extractErrorMessage(error));
+        setResult({ status: ResultStatus.Error, type: "CREATE_ACCOMMODATION" });
+      },
+    }
+  );
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();

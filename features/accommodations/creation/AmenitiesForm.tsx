@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { type Amenity } from "../AccommodationModels";
-import { type AmenitiesList, type CreateAccommodation } from "../createAccommodation";
+import { type AmenitiesList, type CreateAccommodation } from "../accommodationActions";
 
 type AmenitiesFormProps = {
   allAmenities: Map<string, Amenity[]>;
@@ -16,7 +16,7 @@ export const AmenitiesForm: FC<AmenitiesFormProps> = ({
   return (
     <>
       <h3 className="text-xl mb-6 font-semibold">What amenities do you offer?</h3>
-      {[...allAmenities?.keys()].map((at) => (
+      {[...(allAmenities?.keys() ?? [])].map((at) => (
         <div key={at}>
           <h4 className="text-lg font-medium text-gray-700 mt-3">{at}</h4>
           {allAmenities.get(at)?.map((a) => (

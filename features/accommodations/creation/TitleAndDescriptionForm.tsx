@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type CreateAccommodation } from "../accommodationActions";
 import { SimpleTextInput } from "../../../core/components/SimpleTextInput";
 
 type TitleAndDescriptionFormProps = {
