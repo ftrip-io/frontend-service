@@ -1,6 +1,6 @@
-import { useState, type FC, useCallback } from "react";
-import { TileClassNameFunc, type TileDisabledFunc } from "react-calendar/dist/cjs/shared/types";
-import { Availability } from "../AccommodationModels";
+import { useState, type FC, useMemo } from "react";
+import { type TileDisabledFunc } from "react-calendar/dist/cjs/shared/types";
+import { type Availability } from "../AccommodationModels";
 import Calendar from "react-calendar";
 import moment from "moment";
 
@@ -11,9 +11,6 @@ type CalendarPreviewProps = {
   maxDays: number;
   onChange: (c: { checkIn?: Date; checkOut?: Date }) => void;
 };
-
-const AVAILABLE_CLASS = "react-calendar__tile--available" as const;
-const DISABLED_CLASS = "react-calendar__tile--disabled" as const;
 
 export const CalendarPreview: FC<CalendarPreviewProps> = ({
   bookingAdvancePeriod,
@@ -26,10 +23,12 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
   const [dates, setDates] = useState<{ start?: Date; end?: Date; min?: Date; max?: Date }>({
     min: new Date(),
   });
+  const bookingEnd = useMemo(
+    () => moment().add(bookingAdvancePeriod, "months").toDate(),
+    [bookingAdvancePeriod]
+  );
 
   const dateDisabled = (date: Date) => {
-    let bookingEnd = new Date();
-    bookingEnd.setMonth(bookingEnd.getMonth() + bookingAdvancePeriod);
     if (bookingAdvancePeriod >= 0 && (!bookingAdvancePeriod || date < bookingEnd))
       return availabilities.some((a) => a.fromDate <= date && a.toDate >= date && !a.isAvailable);
     return !availabilities.some((a) => a.fromDate <= date && a.toDate >= date && a.isAvailable);
@@ -37,23 +36,10 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
 
   const tileDisabled: TileDisabledFunc = ({ date }) => dateDisabled(date);
 
-  const tileClassName: TileClassNameFunc = ({ date }) => {
-    let bookingEnd = new Date();
-    bookingEnd.setMonth(bookingEnd.getMonth() + bookingAdvancePeriod);
-
-    if (bookingAdvancePeriod >= 0 && (!bookingAdvancePeriod || date < bookingEnd))
-      return availabilities.some((a) => a.fromDate <= date && a.toDate >= date && !a.isAvailable)
-        ? DISABLED_CLASS
-        : AVAILABLE_CLASS;
-    return availabilities.some((a) => a.fromDate <= date && a.toDate >= date && a.isAvailable)
-      ? AVAILABLE_CLASS
-      : DISABLED_CLASS;
-  };
-
   const dateClick = (date: Date) => {
     if (!!dates.start === !!dates.end) {
-      let maxD1 = moment(date).add(maxDays, "days").toDate();
-      let maxD2 =
+      const maxD1 = moment(date).add(maxDays, "days").toDate();
+      const maxD2 =
         availabilities.find((av) => av.fromDate > date && !av.isAvailable)?.fromDate ?? maxD1;
       setDates({ start: date, min: date, max: maxD1 < maxD2 ? maxD1 : maxD2 });
       onChange({ checkIn: date });
@@ -61,6 +47,7 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
       setDates({ start: dates.start, end: date, min: new Date() });
       onChange({ checkIn: dates.start, checkOut: date });
     }
+    // TODO minDate constraint
   };
 
   const clear = () => {
@@ -78,7 +65,6 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
       )}
       <Calendar
         tileDisabled={tileDisabled}
-        // tileClassName={tileClassName}
         value={selectedRange}
         selectRange
         onChange={setSelectedRange}

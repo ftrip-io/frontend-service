@@ -51,10 +51,7 @@ export const useGeolocation = () => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
-      ({ coords: { latitude: lat, longitude: lon, accuracy } }) => {
-        console.log(lat, lon, accuracy);
-        setPosition({ lat, lon });
-      },
+      ({ coords: { latitude: lat, longitude: lon, accuracy } }) => setPosition({ lat, lon }),
       (e) => setError(e.message),
       {
         enableHighAccuracy: true,

@@ -9,23 +9,23 @@ import { BookingCard } from "./BookingCard";
 
 const MapPreview = dynamic(() => import("./MapPreview"), { ssr: false });
 
+const CoverImage: FC<{ url: string; className?: string }> = ({ url, className = "" }) => (
+  <Image
+    src={url}
+    alt="image"
+    width={1000}
+    height={1000}
+    className={`h-full w-full object-cover ${className}`}
+    priority={true}
+  />
+);
+
 export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
   const { photoUrls } = usePhotos(id);
   const { accommodation } = useAccommodation(id);
   const [openAmenities, setOpenAmenities] = useState(false);
   const [openPhotos, setOpenPhotos] = useState(false);
   const [period, setPeriod] = useState<{ checkIn?: Date; checkOut?: Date }>();
-
-  const CoverImage: FC<{ index: number; className?: string }> = ({ index, className = "" }) => (
-    <Image
-      src={photoUrls?.[index]}
-      alt="image"
-      width={1000}
-      height={1000}
-      className={`h-full w-full object-cover ${className}`}
-      priority={true}
-    />
-  );
 
   if (!accommodation) return <></>;
 
@@ -38,23 +38,23 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
       </h3>
       <div className="flex w-full h-96" onClick={() => setOpenPhotos(true)}>
         <div className="w-full md:w-1/2 p-1">
-          <CoverImage index={0} className="rounded-lg md:rounded-r-none" />
+          <CoverImage url={photoUrls?.[0]} className="rounded-lg md:rounded-r-none" />
         </div>
         <div className="hidden md:block w-1/2">
           <div className="flex h-1/2">
             <div className="w-1/2 p-1">
-              <CoverImage index={1} />
+              <CoverImage url={photoUrls?.[1]} />
             </div>
             <div className="w-1/2 p-1">
-              <CoverImage index={2} className="rounded-tr-lg" />
+              <CoverImage url={photoUrls?.[2]} className="rounded-tr-lg" />
             </div>
           </div>
           <div className="flex h-1/2">
             <div className="w-1/2 p-1">
-              <CoverImage index={3} />
+              <CoverImage url={photoUrls?.[3]} />
             </div>
             <div className="w-1/2 p-1">
-              <CoverImage index={4} className="rounded-br-lg" />
+              <CoverImage url={photoUrls?.[4]} className="rounded-br-lg" />
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
         title={`Photos (${photoUrls.length})`}
       >
         {photoUrls.map((url, i) => (
-          <CoverImage index={i} key={url} className="m-2" />
+          <CoverImage url={url} key={i} className="m-2" />
         ))}
       </Modal>
 

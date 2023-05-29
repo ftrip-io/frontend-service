@@ -4,7 +4,7 @@ import { AccommodationPage } from "../../../features/accommodations/preview/Acco
 const Accommodation = () => {
   const router = useRouter();
   const { id } = router.query;
-  return <div className="">{id && <AccommodationPage id={id + ""} />}</div>;
+  return id && <AccommodationPage id={id + ""} />;
 };
 
 export default Accommodation;

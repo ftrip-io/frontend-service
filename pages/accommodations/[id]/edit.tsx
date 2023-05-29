@@ -4,7 +4,7 @@ import { AccommodationEditPage } from "../../../features/accommodations/edit/Acc
 const Accommodation = () => {
   const router = useRouter();
   const { id } = router.query;
-  return <div className="">{id && <AccommodationEditPage id={id + ""} />}</div>;
+  return id && <AccommodationEditPage id={id + ""} />;
 };
 
 export default Accommodation;

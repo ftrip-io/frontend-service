@@ -3,7 +3,8 @@ import { type PriceDiff } from "../AccommodationModels";
 import moment from "moment";
 import IntegerInput from "../../../core/components/IntegerInput";
 import { Button } from "../../../core/components/Button";
-import { matches, parseCronExpression } from "../../../core/utils/cron";
+import { parseCronExpression } from "../../../core/utils/cron";
+import { type PriceInfo, calculatePriceInfo } from "../../../core/utils/calculatePrice";
 
 type BookingCardProps = {
   price: number;
@@ -13,12 +14,6 @@ type BookingCardProps = {
   checkOut?: Date;
   minGuests: number;
   maxGuests: number;
-};
-
-type PriceInfo = {
-  items: { dateStr: string; price: number }[];
-  days: number;
-  total: number;
 };
 
 export const BookingCard: FC<BookingCardProps> = ({
@@ -42,31 +37,11 @@ export const BookingCard: FC<BookingCardProps> = ({
     [priceDiffs]
   );
 
-  useEffect(() => {
-    if (!checkIn || !checkOut) {
-      setPriceInfo(undefined);
-      return;
-    }
-    let date = new Date(checkIn);
-    let info: PriceInfo = { items: [], days: 0, total: 0 };
-    while (date < checkOut) {
-      let p = isPerGuest ? guests * price : price;
-      let sumPercent = priceDiffData
-        .filter((d) => matches(date, d.numbers.monthDays, d.numbers.months, d.numbers.weekDays))
-        .map((d) => d.percentage)
-        .reduce((prev, curr) => prev + curr, 0);
-      p += (sumPercent / 100) * p;
-      let percentStr = sumPercent ? ` (${sumPercent > 0 ? "+" : ""}${sumPercent}%)` : "";
-      info.items.push({
-        dateStr: moment(date).format("YYYY-MM-DD") + percentStr,
-        price: p,
-      });
-      info.days++;
-      info.total += p;
-      date.setDate(date.getDate() + 1);
-    }
-    setPriceInfo(info);
-  }, [checkIn, checkOut, guests, isPerGuest, price, priceDiffData]);
+  useEffect(
+    () =>
+      setPriceInfo(calculatePriceInfo(guests, isPerGuest, price, priceDiffData, checkIn, checkOut)),
+    [checkIn, checkOut, guests, isPerGuest, price, priceDiffData]
+  );
 
   return (
     <div className="m-10 p-5 border-2 rounded-2xl">
@@ -104,7 +79,12 @@ export const BookingCard: FC<BookingCardProps> = ({
               <ul className="border-y">
                 {priceInfo.items?.map((item, i) => (
                   <li key={i} className="justify-between">
-                    <span>{item.dateStr}</span>
+                    <span>
+                      {moment(item.date).format("YYYY-MM-DD")}
+                      {item.priceDiffPercent
+                        ? ` (${item.priceDiffPercent > 0 ? "+" : ""}${item.priceDiffPercent}%)`
+                        : ""}
+                    </span>
                     <span className="float-right">$ {item.price.toFixed(0)}</span>
                   </li>
                 ))}

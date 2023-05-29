@@ -35,14 +35,18 @@ const SliderDots: FC<{
   );
 };
 
-export const ImageSlider: FC<{ images: string[] }> = ({ images }) => {
+export const ImageSlider: FC<{ images: string[]; width?: number; height?: number }> = ({
+  images,
+  width = 1000,
+  height = 1000,
+}) => {
   const { step, isFirstStep, isLastStep, back, next, goTo, currentStepIndex } = useMultistepForm(
     images?.map((url) => (
       <Image
         src={url}
         alt="image"
-        width={1000}
-        height={1000}
+        width={width}
+        height={height}
         className="h-80 w-80 object-cover rounded-xl"
         priority={true}
         key={url}
