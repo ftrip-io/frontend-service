@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import IntegerInput from "../../../core/components/IntegerInput";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type CreateAccommodation } from "../accommodationActions";
 
 type RoomsFormProps = {
   updateFields: (fields: Partial<CreateAccommodation>) => void;

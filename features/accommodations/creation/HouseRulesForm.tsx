@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type CreateAccommodation } from "../accommodationActions";
 
 type HouseRulesFormProps = {
   updateFields: (fields: Partial<CreateAccommodation>) => void;

@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { PlaceType, type PropertyType } from "../AccommodationModels";
 import { SelectOptionField } from "../../../core/components/SelectOptionField";
-import { type CreateAccommodation } from "../createAccommodation";
+import { type CreateAccommodation } from "../accommodationActions";
 import RadioGroup from "../../../core/components/RadioGroup";
 
 type PropertyFormProps = {
