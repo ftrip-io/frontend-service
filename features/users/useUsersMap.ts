@@ -17,7 +17,7 @@ export function useUsersMap(userIds: User["id"][], dependencies: any[] = []) {
   );
 
   return {
-    usersMap: createEntitiesMap(data?.data ?? []) as { [key: string]: User },
+    usersMap: createEntitiesMap((data?.data as User[]) ?? []),
     isLoading: isFetching,
     error: (error as any)?.response?.data,
   };

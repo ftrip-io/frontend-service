@@ -1,12 +1,9 @@
-export const createEntitiesMap = (
-  entities: any,
-  keySelector = (entity: any) => entity.id,
-  valueSelector = (entity: any) => entity
-) => {
-  return (
-    entities?.reduce((map: any, entity: any) => {
-      map[keySelector(entity)] = valueSelector(entity);
-      return map;
-    }, {}) ?? {}
-  );
-};
+export const createEntitiesMap = <T extends { id: string }>(
+  entities: T[],
+  keySelector = (entity: T) => entity.id,
+  valueSelector = (entity: T) => entity
+) =>
+  entities?.reduce((map: { [key: string]: T }, entity: T) => {
+    map[keySelector(entity)] = valueSelector(entity);
+    return map;
+  }, {}) ?? {};
