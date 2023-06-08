@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { createEntitiesMap } from "../../core/utils/map";
 
-type AccommodationInfo = {
+export type AccommodationInfo = {
   id: string;
   title: string;
 };
@@ -15,7 +15,7 @@ export function useAccommodationsMap(accommodationIds: string[], dependencies: a
         `/catalogService/api/accommodations?${accommodationIds?.map((id) => "ids=" + id).join("&")}`
       ),
     {
-      enabled: dependencies?.reduce((acc, dep) => acc && !dep, true) && accommodationIds?.length,
+      enabled: dependencies?.reduce((acc, dep) => acc && !dep, true) && !!accommodationIds?.length,
     }
   );
 
