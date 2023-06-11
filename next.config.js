@@ -29,6 +29,7 @@ const nextConfig = {
           process.env.API_PROXY_URL
             ? process.env.API_PROXY_URL + "catalogService"
             : "http://localhost:4999"
+          // : "http://localhost:4988"
         }/:path*`,
       },
       {
@@ -45,6 +46,14 @@ const nextConfig = {
           process.env.API_PROXY_URL
             ? process.env.API_PROXY_URL + "/rtcService"
             : "http://localhost:4996"
+        }/:path*`,
+      },
+      {
+        source: "/bookingService/:path*",
+        destination: `${
+          process.env.API_PROXY_URL
+            ? process.env.API_PROXY_URL + "/bookingService"
+            : "http://localhost:4995"
         }/:path*`,
       },
     ];

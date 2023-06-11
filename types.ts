@@ -2,4 +2,9 @@ type UserSpecificProfilePageProps = {
   userId: string;
 };
 
-export type { UserSpecificProfilePageProps };
+type DatePeriod = {
+  dateFrom: Date;
+  dateTo: Date;
+};
+
+export type { UserSpecificProfilePageProps, DatePeriod };
