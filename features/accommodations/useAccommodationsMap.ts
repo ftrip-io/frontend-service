@@ -5,6 +5,7 @@ import { createEntitiesMap } from "../../core/utils/map";
 export type AccommodationInfo = {
   id: string;
   title: string;
+  hostId: string;
 };
 
 export function useAccommodationsMap(accommodationIds: string[], dependencies: any[] = []) {

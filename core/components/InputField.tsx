@@ -21,7 +21,7 @@ export const InputField: FC<InputFieldProps> = ({
   }
 
   return (
-    <>
+    <div className="block">
       {label ? <label className="block text-lg font-medium text-gray-700">{label}</label> : <></>}
       <input
         type={type}
@@ -38,6 +38,6 @@ export const InputField: FC<InputFieldProps> = ({
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 };

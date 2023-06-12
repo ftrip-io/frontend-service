@@ -5,8 +5,17 @@ import IntegerInput from "../../../core/components/IntegerInput";
 import { Button } from "../../../core/components/Button";
 import { parseCronExpression } from "../../../core/utils/cron";
 import { type PriceInfo, calculatePriceInfo } from "../../../core/utils/calculatePrice";
+import { createReservationRequest } from "../../requests/requestActions";
+import { useAction } from "../../../core/hooks/useAction";
+import { notifications } from "../../../core/hooks/useNotifications";
+import { useRequestsResult } from "../../requests/useRequestsResult";
+import { ResultStatus } from "../../../core/contexts/Result";
+import { extractErrorMessage } from "../../../core/utils/errors";
+import { useAuthContext } from "../../../core/contexts/Auth";
+import { type CreateReservationRequest } from "../../requests/ReservationRequestsModels";
 
 type BookingCardProps = {
+  id: string;
   price: number;
   isPerGuest: boolean;
   priceDiffs: PriceDiff[];
@@ -17,6 +26,7 @@ type BookingCardProps = {
 };
 
 export const BookingCard: FC<BookingCardProps> = ({
+  id,
   price,
   isPerGuest,
   priceDiffs,
@@ -28,6 +38,22 @@ export const BookingCard: FC<BookingCardProps> = ({
   const [priceInfo, setPriceInfo] = useState<PriceInfo>();
   const [showDetails, setShowDetails] = useState(false);
   const [guests, setGuests] = useState(1);
+
+  const guestId = useAuthContext().user?.id ?? "";
+
+  const { setResult } = useRequestsResult();
+
+  const createRequestAction = useAction<CreateReservationRequest>(createReservationRequest, {
+    onSuccess: () => {
+      notifications.success("You have successfully created reservation request.");
+      setResult({ status: ResultStatus.Ok, type: "CREATED_REQUEST" });
+    },
+    onError: (error: any) => {
+      notifications.error(extractErrorMessage(error));
+      setResult({ status: ResultStatus.Error, type: "CREATED_REQUEST" });
+    },
+  });
+
   const priceDiffData = useMemo(
     () =>
       priceDiffs.map((pd) => ({
@@ -63,7 +89,20 @@ export const BookingCard: FC<BookingCardProps> = ({
         <IntegerInput onChange={setGuests} value={guests} min={minGuests} max={maxGuests} />
       </div>
       <div className="mt-2 w-full">
-        <Button className="w-full" onClick={() => alert("#TODO")}>
+        <Button
+          className="w-full"
+          onClick={() =>
+            createRequestAction({
+              guestId,
+              accomodationId: id,
+              guestNumber: guests,
+              datePeriod: {
+                dateFrom: checkIn as Date,
+                dateTo: checkOut as Date,
+              },
+            })
+          }
+        >
           Reserve
         </Button>
       </div>

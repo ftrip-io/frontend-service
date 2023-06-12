@@ -13,4 +13,5 @@ export type User = {
   lastName: string;
   email: string;
   city: string;
+  type: UserType;
 };

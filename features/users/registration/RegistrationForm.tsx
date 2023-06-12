@@ -24,6 +24,7 @@ export const RegistrationForm: FC = () => {
     register: registrationForm,
     handleSubmit,
     formState: { errors },
+    setValue,
     watch,
   } = useZodValidatedFrom<CreateUser>(createUserSchema);
   const type = watch("type");
@@ -105,6 +106,7 @@ export const RegistrationForm: FC = () => {
                   formElement={registrationForm("type")}
                   errorMessage={errors.type?.message}
                   value={type}
+                  onChange={(value) => setValue("type", value)}
                   options={userTypeOptions}
                 />
               </div>

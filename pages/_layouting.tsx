@@ -1,6 +1,7 @@
 import { type FC, type PropsWithChildren } from "react";
 import { useRouter } from "next/router";
 import SettingsLayout from "./settings/_settings.layout";
+import ProfileLayout from "./users/[id]/_profile.layout";
 
 type NestedLayout = {
   path: string;
@@ -19,6 +20,11 @@ const registeredLayouts: NestedLayout[] = [
     path: "/settings",
     pathMatch: "startsWith",
     component: SettingsLayout,
+  },
+  {
+    path: "/users/[id]",
+    pathMatch: "startsWith",
+    component: ProfileLayout,
   },
 ];
 

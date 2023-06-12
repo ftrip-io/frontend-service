@@ -27,6 +27,7 @@ import { useAction } from "../../../core/hooks/useAction";
 import { extractErrorMessage } from "../../../core/utils/errors";
 import { useRouter } from "next/router";
 import { Accommodation } from "../AccommodationModels";
+import { useAccommodationsResult } from "../useAccommodationsResult";
 
 const MapForm = dynamic(() => import("./MapForm"), { ssr: false });
 
@@ -115,7 +116,7 @@ export const AccomodationMultiStepForm: FC = () => {
   ]);
 
   const notifications = useNotifications();
-  const { setResult } = useResult("accommodations");
+  const { setResult } = useAccommodationsResult();
   const router = useRouter();
 
   const createAccommodationAction = useAction<CreateAccommodation, Accommodation>(
