@@ -13,16 +13,7 @@ import { useNotifications } from "../../core/hooks/useNotifications";
 import { ResultStatus } from "../../core/contexts/Result";
 import { extractErrorMessage } from "../../core/utils/errors";
 import { ReservationRequestsSearchForm } from "./ReservationRequestsSearchForm";
-
-function statusToText(status: ReservationRequestStatus) {
-  const map = {
-    [ReservationRequestStatus.Waiting]: "Waiting",
-    [ReservationRequestStatus.Accepted]: "Accepted",
-    [ReservationRequestStatus.Declined]: "Declined",
-  };
-
-  return map[status];
-}
+import { statusToText } from "./utils";
 
 const ReservationRequestRow: FC<{
   reservationRequest: ReservationRequest;

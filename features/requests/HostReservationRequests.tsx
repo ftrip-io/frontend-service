@@ -16,16 +16,7 @@ import { useUsersMap } from "../users/useUsersMap";
 import { useAccommodationsByHost } from "../accommodations/useAccommodations";
 import { SelectAccomodation } from "../common/SelectAccommodation";
 import { useAccommodationsMap } from "../accommodations/useAccommodationsMap";
-
-function statusToText(status: ReservationRequestStatus) {
-  const map = {
-    [ReservationRequestStatus.Waiting]: "Waiting",
-    [ReservationRequestStatus.Accepted]: "Accepted",
-    [ReservationRequestStatus.Declined]: "Declined",
-  };
-
-  return map[status];
-}
+import { statusToText } from "./utils";
 
 const ReservationRequestRow: FC<{
   reservationRequest: ReservationRequest;

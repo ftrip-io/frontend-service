@@ -17,7 +17,7 @@ function useReservationsByGuest(guestId: string, filters: Filters, dependencies:
         params: {
           guestId,
           ...(filters.includeCancelled !== ""
-            ? { includeCancelled: filters.includeCancelled === "1" ? true : false }
+            ? { includeCancelled: filters.includeCancelled === "1" }
             : {}),
           ...(filters.dateFrom ? { periodFrom: moment(filters.dateFrom).format() } : {}),
           ...(filters.dateTo ? { periodTo: moment(filters.dateTo).format() } : {}),

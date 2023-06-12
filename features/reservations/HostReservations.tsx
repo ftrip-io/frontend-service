@@ -46,7 +46,7 @@ const ReservationsPage: FC<{ reservations: Reservation[] }> = ({ reservations })
   return (
     <>
       <ol>
-        {reservations.map((reservation: Reservation, i: number) => {
+        {reservations?.map((reservation: Reservation, i: number) => {
           const guest = guestsMap[reservation.guestId];
           reservation.guest = `${guest?.firstName} ${guest?.lastName}`;
 
@@ -81,7 +81,7 @@ export const HostReservations: FC<HostReservationsProps> = ({ hostId }) => {
     setResult(undefined);
   }, [result, setResult]);
 
-  if (isLoading || !reservations) return <></>;
+  if (isLoading) return <></>;
 
   return (
     <>
