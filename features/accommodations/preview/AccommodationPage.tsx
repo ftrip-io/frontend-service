@@ -62,9 +62,9 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
       <Modal
         isOpen={openPhotos}
         onClose={() => setOpenPhotos(false)}
-        title={`Photos (${photoUrls.length})`}
+        title={`Photos (${photoUrls?.length})`}
       >
-        {photoUrls.map((url, i) => (
+        {photoUrls?.map((url, i) => (
           <CoverImage url={url} key={i} className="m-2" />
         ))}
       </Modal>

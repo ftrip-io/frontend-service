@@ -33,3 +33,25 @@ function convertDates(accommodation: Accommodation) {
   accommodation.availabilities.sort((a1, a2) => a1.fromDate.getTime() - a2.fromDate.getTime());
   return accommodation;
 }
+
+// NOTE: This is for now, later we will migrate to endpoint from catalogService
+export function useAccommodationsByHost(hostId: string, dependencies: any[] = []) {
+  const { data, isFetching, error } = useQuery(
+    [`accommodations/${hostId}`, ...dependencies],
+    () =>
+      axios.get(`/bookingService/api/accommodations`, {
+        params: {
+          hostId,
+        },
+      }),
+    {
+      enabled: dependencies?.reduce((acc, dep) => acc && !dep, true) && !!hostId,
+    }
+  );
+
+  return {
+    accommodations: data?.data as Accommodation[],
+    isLoading: isFetching,
+    error: (error as any)?.response?.data,
+  };
+}

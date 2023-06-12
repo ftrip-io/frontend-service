@@ -32,7 +32,7 @@ export const SelectOptionField: FC<SelectOptionFieldProps> = ({
   }
 
   return (
-    <>
+    <div className="block">
       {label ? <label className="block text-lg font-medium text-gray-700">{label}</label> : <></>}
       <select
         disabled={disabled ?? false}
@@ -61,6 +61,6 @@ export const SelectOptionField: FC<SelectOptionFieldProps> = ({
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 };
