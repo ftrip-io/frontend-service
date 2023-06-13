@@ -6,6 +6,9 @@ import { Modal } from "../../../core/components/Modal";
 import dynamic from "next/dynamic";
 import { CalendarPreview } from "./CalendarPreview";
 import { BookingCard } from "./BookingCard";
+import { AccommodationReviewsSummary } from "../../reviews/accommodations/AccommodationReviewsSummary";
+import { AccommodationReviews } from "../../reviews/accommodations/AccommodationReviews";
+import Link from "next/link";
 
 const MapPreview = dynamic(() => import("./MapPreview"), { ssr: false });
 
@@ -73,8 +76,15 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
         <div className="md:w-2/3">
           <div className="border-b-2 py-4">
             <h1 className="text-xl font-semibold mt-3">
-              {["Entire place", "Private room", "Shared room"][accommodation.placeType]} hosted by{" "}
-              {accommodation.hostId}
+              <div className="flex items-center min-w-full">
+                <Link href={`/users/${accommodation?.hostId}`} className="flex-grow cursor">
+                  {["Entire place", "Private room", "Shared room"][accommodation.placeType]} hosted
+                  by {accommodation.hostId}{" "}
+                </Link>
+                <div className="justify-end">
+                  <AccommodationReviewsSummary accommodationId={accommodation.id} />
+                </div>
+              </div>
             </h1>
 
             <p>
@@ -132,6 +142,7 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
       </div>
       <div className="border-b-2 py-4">
         <h1 className="text-xl font-semibold my-3">Reviews</h1>
+        <AccommodationReviews accommodationId={accommodation.id} />
       </div>
     </div>
   );
