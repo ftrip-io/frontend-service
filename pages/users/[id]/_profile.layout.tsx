@@ -7,7 +7,9 @@ import { type User, UserType } from "../../../features/users/UserModels";
 import { VerticalMenu } from "../../../core/components/VerticalMenu";
 import { useUsersResult } from "../../../features/users/useUsersResult";
 import { UserSpecific } from "../../../core/components/UserSpecific";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
+import { HostReviewsSummary } from "../../../features/reviews/hosts/HostReviewsSummary";
 
 function getSharedLinks(router: NextRouter, user: User) {
   return [
@@ -31,11 +33,39 @@ function getSharedLinks(router: NextRouter, user: User) {
 }
 
 function getLinksForGuest(router: NextRouter, user: User) {
-  return [...getSharedLinks(router, user)];
+  return [
+    ...getSharedLinks(router, user),
+    {
+      title: "Accommodation Reviews",
+      icon: <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500" />,
+      path: "/users/[id]/reviews/accommodations",
+      onClick: async () => {
+        await router.push(`/users/${user?.id}/reviews/accommodations`);
+      },
+    },
+    {
+      title: "Host Reviews",
+      icon: <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500" />,
+      path: "/users/[id]/reviews/hosts",
+      onClick: async () => {
+        await router.push(`/users/${user?.id}/reviews/hosts`);
+      },
+    },
+  ];
 }
 
 function getLinksForHost(router: NextRouter, user: User) {
-  return [...getSharedLinks(router, user)];
+  return [
+    ...getSharedLinks(router, user),
+    {
+      title: "Reviews",
+      icon: <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500" />,
+      path: "/users/[id]/reviews",
+      onClick: async () => {
+        await router.push(`/users/${user?.id}/reviews`);
+      },
+    },
+  ];
 }
 
 type UserInformationsProps = {
@@ -49,6 +79,8 @@ const UserInformations: FC<UserInformationsProps> = ({ user }) => {
         <div className="text-4xl font-medium">
           {user.firstName} {user.lastName}
         </div>
+        {user.type === UserType.Host ? <HostReviewsSummary hostId={user.id} /> : <></>}
+
         <div className="text-2xl">{user.email}</div>
         <div className="text-xl">{user.city}</div>
       </div>
