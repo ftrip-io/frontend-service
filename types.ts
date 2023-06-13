@@ -7,4 +7,10 @@ type DatePeriod = {
   dateTo: Date;
 };
 
-export type { UserSpecificProfilePageProps, DatePeriod };
+type PageResult<T> = {
+  entities: T[];
+  totalPages: number;
+  totalEntities: number;
+};
+
+export type { UserSpecificProfilePageProps, PageResult, DatePeriod };
