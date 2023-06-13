@@ -1,13 +1,13 @@
 import { type FC } from "react";
 
-export const Star: FC = () => {
-  const style = {
-    display: "block",
-    height: "14px",
-    width: "14px",
-    fill: "currentcolor",
-  };
+const style = {
+  display: "block",
+  height: "14px",
+  width: "14px",
+  fill: "currentcolor",
+};
 
+export const Star: FC = () => {
   return (
     <svg
       viewBox="0 0 32 32"

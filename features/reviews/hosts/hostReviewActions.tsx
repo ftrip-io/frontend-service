@@ -5,7 +5,7 @@ const reviewHostScheme = z.object({
   hostId: z.string().min(1, "Host must be provided."),
   communicationGrade: z.number().min(1).max(5).default(1),
   overallGrade: z.number().min(1).max(5).default(1),
-  recensionText: z.string().min(10, "You have to write at least 10 charaters"),
+  recensionText: z.string().min(10, "You have to write at least 10 charaters."),
 });
 
 type ReviewHost = z.infer<typeof reviewHostScheme>;
