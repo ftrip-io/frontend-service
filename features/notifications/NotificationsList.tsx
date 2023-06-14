@@ -7,6 +7,13 @@ import { deleteNotification, seenNotification, unseenNotification } from "./noti
 import { extractErrorMessage } from "../../core/utils/errors";
 import { useNotificationsResult } from "./useNotificationsResult";
 import { ResultStatus } from "../../core/contexts/Result";
+import {
+  extractReferencesFromNotificationText,
+  replaceAccommodationOnNotificationText,
+  replaceUserOnNotificationText,
+} from "./utils";
+import { useUsersMap } from "../users/useUsersMap";
+import { useAccommodationsMap } from "../accommodations/useAccommodationsMap";
 
 type NotificationsListProps = {
   notifications: TNotification[];
@@ -49,17 +56,36 @@ export const NotificationsList: FC<NotificationsListProps> = ({ notifications })
     },
   });
 
+  const notificationReferences = notifications?.map((notification) =>
+    extractReferencesFromNotificationText(notification.message)
+  );
+  const userIds = notificationReferences?.flatMap((references) => references["User"] || []);
+  const { usersMap } = useUsersMap(userIds);
+
+  const accommodationIds = notificationReferences?.flatMap(
+    (references) => references["Accommodation"] || []
+  );
+  const { accommodationsMap } = useAccommodationsMap(accommodationIds);
+
   return (
     <ul role="list" className="divide-y divide-gray-100">
-      {notifications?.map((notification: TNotification) => (
-        <NotificationListItem
-          key={notification.id}
-          notification={notification}
-          onSeenClick={() => seenNotificationAction(notification)}
-          onUnseenClick={() => unseenNotificationAction(notification)}
-          onDeleteClick={() => deleteNotificationAction(notification)}
-        />
-      ))}
+      {notifications?.map((notification: TNotification) => {
+        notification.message = replaceUserOnNotificationText(notification.message, usersMap);
+        notification.message = replaceAccommodationOnNotificationText(
+          notification.message,
+          accommodationsMap
+        );
+
+        return (
+          <NotificationListItem
+            key={notification.id}
+            notification={notification}
+            onSeenClick={() => seenNotificationAction(notification)}
+            onUnseenClick={() => unseenNotificationAction(notification)}
+            onDeleteClick={() => deleteNotificationAction(notification)}
+          />
+        );
+      })}
     </ul>
   );
 };
