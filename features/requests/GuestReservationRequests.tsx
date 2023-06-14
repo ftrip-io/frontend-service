@@ -36,7 +36,7 @@ const ReservationRequestRow: FC<{
                 {new Date(reservationRequest.datePeriod.dateTo).toDateString()} (
                 {statusToText(reservationRequest.status)})
               </p>
-
+              <p>Total price: {reservationRequest.totalPrice}$</p>
               <p className="text-sm text-gray-700">
                 requested {moment(reservationRequest.createdAt).fromNow()}
               </p>

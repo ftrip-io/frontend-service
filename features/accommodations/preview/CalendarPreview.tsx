@@ -4,12 +4,15 @@ import { type Availability } from "../AccommodationModels";
 import Calendar from "react-calendar";
 import moment from "moment";
 
+type CheckPeriod = { checkIn?: Date; checkOut?: Date };
+
 type CalendarPreviewProps = {
   bookingAdvancePeriod: number;
   availabilities: Availability[];
   minDays: number;
   maxDays: number;
-  onChange: (c: { checkIn?: Date; checkOut?: Date }) => void;
+  value: CheckPeriod;
+  onChange: (c: CheckPeriod) => void;
 };
 
 export const CalendarPreview: FC<CalendarPreviewProps> = ({
@@ -17,11 +20,18 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
   availabilities,
   minDays,
   maxDays,
+  value,
   onChange,
 }) => {
-  const [selectedRange, setSelectedRange] = useState<any>();
+  console.log(value);
+
+  const initial = value.checkIn && value.checkOut ? [value.checkIn, value.checkOut] : [];
+
+  const [selectedRange, setSelectedRange] = useState<any>(initial);
   const [dates, setDates] = useState<{ start?: Date; end?: Date; min?: Date; max?: Date }>({
     min: new Date(),
+    start: value.checkIn ?? undefined,
+    end: value.checkOut ?? undefined,
   });
   const bookingEnd = useMemo(
     () => moment().add(bookingAdvancePeriod, "months").toDate(),
@@ -55,6 +65,8 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
     setDates({ min: new Date() });
     onChange({});
   };
+
+  console.log(selectedRange);
 
   return (
     <div>

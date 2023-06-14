@@ -1,5 +1,10 @@
 import { type FC } from "react";
+import { AccommodationSearchPage } from "../accommodations/search/AccommodationSearchPage";
 
 export const HomePage: FC = () => {
-  return <div className="w-full h-full flex justify-between">Home Page Content</div>;
+  return (
+    <div>
+      <AccommodationSearchPage />
+    </div>
+  );
 };

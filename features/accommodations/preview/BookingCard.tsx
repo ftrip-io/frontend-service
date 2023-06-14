@@ -13,6 +13,7 @@ import { ResultStatus } from "../../../core/contexts/Result";
 import { extractErrorMessage } from "../../../core/utils/errors";
 import { useAuthContext } from "../../../core/contexts/Auth";
 import { type CreateReservationRequest } from "../../requests/ReservationRequestsModels";
+import { useRouter } from "next/router";
 
 type BookingCardProps = {
   id: string;
@@ -35,9 +36,11 @@ export const BookingCard: FC<BookingCardProps> = ({
   minGuests,
   maxGuests,
 }) => {
+  const router = useRouter();
+
   const [priceInfo, setPriceInfo] = useState<PriceInfo>();
   const [showDetails, setShowDetails] = useState(false);
-  const [guests, setGuests] = useState(1);
+  const [guests, setGuests] = useState(+(router.query?.guestNum || 1));
 
   const guestId = useAuthContext().user?.id ?? "";
 
@@ -49,7 +52,11 @@ export const BookingCard: FC<BookingCardProps> = ({
       setResult({ status: ResultStatus.Ok, type: "CREATED_REQUEST" });
     },
     onError: (error: any) => {
-      notifications.error(extractErrorMessage(error));
+      const messages = extractErrorMessage(error).split("\n");
+      for (let message of messages) {
+        notifications.error(message);
+      }
+
       setResult({ status: ResultStatus.Error, type: "CREATED_REQUEST" });
     },
   });

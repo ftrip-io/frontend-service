@@ -27,7 +27,7 @@ const ReservationRow: FC<{
               {new Date(reservation.datePeriod.dateTo).toDateString()}{" "}
               {reservation.isCancelled ? "(Cancelled)" : ""}
             </p>
-
+            <p>Total price: {reservation.totalPrice}$</p>
             <p className="text-sm text-gray-700">
               created {moment(reservation.createdAt).fromNow()}
             </p>

@@ -10,6 +10,7 @@ type Reservation = {
   guestNumber: number;
   isCancelled: boolean;
   createdAt: string;
+  totalPrice: number;
 };
 
 export type { Reservation };
