@@ -6,6 +6,11 @@ import { Modal } from "../../../core/components/Modal";
 import dynamic from "next/dynamic";
 import { CalendarPreview } from "./CalendarPreview";
 import { BookingCard } from "./BookingCard";
+import { useRouter } from "next/router";
+import moment from "moment";
+import { useUser } from "../../users/useUsers";
+import { UserSpecific } from "../../../core/components/UserSpecific";
+import { Button } from "../../../core/components/Button";
 import { AccommodationReviewsSummary } from "../../reviews/accommodations/AccommodationReviewsSummary";
 import { AccommodationReviews } from "../../reviews/accommodations/AccommodationReviews";
 import Link from "next/link";
@@ -24,11 +29,19 @@ const CoverImage: FC<{ url: string; className?: string }> = ({ url, className = 
 );
 
 export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
+  const router = useRouter();
   const { photoUrls } = usePhotos(id);
   const { accommodation } = useAccommodation(id);
   const [openAmenities, setOpenAmenities] = useState(false);
   const [openPhotos, setOpenPhotos] = useState(false);
-  const [period, setPeriod] = useState<{ checkIn?: Date; checkOut?: Date }>();
+
+  const { user } = useUser(accommodation?.hostId ?? "");
+  const fromDate = router.query?.fromDate?.toString();
+  const toDate = router.query?.toDate?.toString();
+  const [period, setPeriod] = useState<{ checkIn?: Date; checkOut?: Date }>({
+    checkIn: fromDate ? moment(fromDate).startOf("day").toDate() : undefined,
+    checkOut: toDate ? moment(toDate).endOf("day").toDate() : undefined,
+  });
 
   if (!accommodation) return <></>;
 
@@ -75,18 +88,24 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
       <div className="md:flex">
         <div className="md:w-2/3">
           <div className="border-b-2 py-4">
-            <h1 className="text-xl font-semibold mt-3">
-              <div className="flex items-center min-w-full">
-                <Link href={`/users/${accommodation?.hostId}`} className="flex-grow cursor">
-                  {["Entire place", "Private room", "Shared room"][accommodation.placeType]} hosted
-                  by {accommodation.hostId}{" "}
-                </Link>
-                <div className="justify-end">
-                  <AccommodationReviewsSummary accommodationId={accommodation.id} />
-                </div>
+            <div className="flex min-w-full">
+              <div className="flex-grow">
+                <h1 className="text-xl font-semibold mt-3">
+                  <div className="items-center min-w-full">
+                    <Link href={`/users/${accommodation?.hostId}`} className="flex-grow cursor">
+                      {["Entire place", "Private room", "Shared room"][accommodation.placeType]}{" "}
+                      hosted by {user?.firstName} {user?.lastName}
+                    </Link>{" "}
+                    <AccommodationReviewsSummary accommodationId={accommodation.id} />
+                  </div>
+                </h1>
               </div>
-            </h1>
-
+              <UserSpecific userId={accommodation.hostId}>
+                <Link href={`/accommodations/${accommodation.id}/edit`}>
+                  <Button>Edit</Button>
+                </Link>
+              </UserSpecific>
+            </div>
             <p>
               {accommodation.maxGuests} guests · {accommodation.bedroomCount} bedrooms ·{" "}
               {accommodation.bedCount} beds · {accommodation.bathroomCount} bath
@@ -122,6 +141,7 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
               bookingAdvancePeriod={accommodation.bookingAdvancePeriod}
               minDays={accommodation.minNights}
               maxDays={accommodation.maxNights}
+              value={period}
               onChange={(c) => setPeriod({ ...c })}
             />
           </div>
