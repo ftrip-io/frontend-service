@@ -6,6 +6,7 @@ export type MenuItem = {
   icon: ReactElement;
   path: string;
   onClick: () => any;
+  show?: () => boolean;
 };
 
 type VerticalMenuProps = {
@@ -24,22 +25,24 @@ export const VerticalMenu: FC<VerticalMenuProps> = ({ links }) => {
 
   return (
     <ul className="space-y-2">
-      {links?.map((link: MenuItem) => {
-        return (
-          <li key={link.title}>
-            <p
-              onClick={link.onClick}
-              className={
-                "flex items-center p-2 text-base cursor-pointer font-normal text-gray-900 rounded-lg hover:bg-gray-300" +
-                (isActive(link.path) ? " bg-gray-200" : " ")
-              }
-            >
-              {link.icon}
-              <span className="ml-3">{link.title}</span>
-            </p>
-          </li>
-        );
-      })}
+      {links
+        ?.filter((link: MenuItem) => !link.show || link.show())
+        .map((link: MenuItem) => {
+          return (
+            <li key={link.title}>
+              <p
+                onClick={link.onClick}
+                className={
+                  "flex items-center p-2 text-base cursor-pointer font-normal text-gray-900 rounded-lg hover:bg-gray-300" +
+                  (isActive(link.path) ? " bg-gray-200" : " ")
+                }
+              >
+                {link.icon}
+                <span className="ml-3">{link.title}</span>
+              </p>
+            </li>
+          );
+        })}
     </ul>
   );
 };
