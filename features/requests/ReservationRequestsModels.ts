@@ -18,6 +18,7 @@ type ReservationRequest = {
   datePeriod: DatePeriod;
   status: ReservationRequestStatus;
   createdAt: string;
+  totalPrice: number;
 };
 
 enum ReservationRequestStatus {

@@ -1,9 +1,9 @@
-import { type ComponentType, type FC, useState } from "react";
+import { type ComponentType, type FC, useState, useEffect } from "react";
 import { useAccommodation } from "../useAccommodations";
 import { usePhotos } from "../usePhotos";
 import Image from "next/image";
 import { Modal } from "../../../core/components/Modal";
-import { ResultStatus, useResult } from "../../../core/contexts/Result";
+import { ResultStatus } from "../../../core/contexts/Result";
 import { type Accommodation } from "../AccommodationModels";
 import dynamic from "next/dynamic";
 import { useNotifications } from "../../../core/hooks/useNotifications";
@@ -13,6 +13,8 @@ import { useRouter } from "next/router";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { bookingAdvancePeriodLabels } from "../creation/CalendarForm";
 import { toText } from "../../../core/utils/cron";
+import { BookingConfiguration } from "../booking-configuration/BookingConfiguration";
+import { useAccommodationsResult } from "../useAccommodationsResult";
 
 export type AccommodationUpdateFormProps = {
   accommodation: Accommodation;
@@ -48,7 +50,7 @@ const forms = {
 } as const;
 
 export const AccommodationEditPage: FC<{ id: string }> = ({ id }) => {
-  const { setResult, result } = useResult("accommodations");
+  const { setResult, result } = useAccommodationsResult();
   const notifications = useNotifications();
   const [updatedAccommodation, setUpdatedAccommodation] = useState<Accommodation>();
   const [updatedUrls, setUpdatedUrls] = useState<string[]>();
@@ -57,6 +59,12 @@ export const AccommodationEditPage: FC<{ id: string }> = ({ id }) => {
   const router = useRouter();
 
   const [ActiveForm, setActiveForm] = useState<ComponentType<AccommodationUpdateFormProps>>();
+
+  useEffect(() => {
+    if (!result) return;
+
+    setResult(undefined);
+  }, [result, setResult]);
 
   const setActiveModal = (name?: UpdateFormName) => {
     setActiveForm(name ? forms[name] : undefined);
@@ -265,6 +273,16 @@ export const AccommodationEditPage: FC<{ id: string }> = ({ id }) => {
             <EditButton formName="pricing" />
           </div>
         </div>
+
+        <div className="border-b-2 p-2 justify-between">
+          <div>
+            <h4 className="font-semibold">Booking Configuration</h4>
+          </div>
+          <div>
+            <BookingConfiguration accommodationId={accommodation.id} />
+          </div>
+        </div>
+
         <div className="border-b-2 p-2 flex justify-between">
           <div>
             <h4 className="font-semibold">Delete accommodation</h4>
