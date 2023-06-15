@@ -23,11 +23,9 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
   value,
   onChange,
 }) => {
-  console.log(value);
-
-  const initial = value.checkIn && value.checkOut ? [value.checkIn, value.checkOut] : [];
-
-  const [selectedRange, setSelectedRange] = useState<any>(initial);
+  const [selectedRange, setSelectedRange] = useState<any>(
+    value.checkIn && value.checkOut ? [value.checkIn, value.checkOut] : []
+  );
   const [dates, setDates] = useState<{ start?: Date; end?: Date; min?: Date; max?: Date }>({
     min: new Date(),
     start: value.checkIn ?? undefined,
@@ -65,8 +63,6 @@ export const CalendarPreview: FC<CalendarPreviewProps> = ({
     setDates({ min: new Date() });
     onChange({});
   };
-
-  console.log(selectedRange);
 
   return (
     <div>

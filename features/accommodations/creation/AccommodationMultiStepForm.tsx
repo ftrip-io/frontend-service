@@ -152,7 +152,7 @@ export const AccomodationMultiStepForm: FC = () => {
 
   return (
     <div className="w-1/2 h-full">
-      <div className="fixed top-0 py-4 bg-white w-1/2">
+      <div className="fixed py-4 bg-white w-1/2">
         <div className="pb-2">{step.key}</div>
         <div className="w-full bg-gray-300 rounded-full h-1">
           <div

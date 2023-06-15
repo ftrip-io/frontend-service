@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { type FC, useCallback, useState } from "react";
 import { useSearchAvailableAccommodations } from "./useAccommodationSearch";
 import { AccommodationSearchResults } from "./AccommodationSearchResults";
 import { AccommodationSearchForm } from "./AccommodationSearchForm";

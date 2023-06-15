@@ -89,17 +89,17 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
         <div className="md:w-2/3">
           <div className="border-b-2 py-4">
             <div className="flex min-w-full">
-              <h1 className="text-xl font-semibold mt-3">
-                <div className="flex items-center min-w-full">
-                  <Link href={`/users/${accommodation?.hostId}`} className="flex-grow cursor">
-                    {["Entire place", "Private room", "Shared room"][accommodation.placeType]}{" "}
-                    hosted by {user?.firstName} {user?.lastName}
-                  </Link>
-                  <div className="justify-end">
+              <div className="flex-grow">
+                <h1 className="text-xl font-semibold mt-3">
+                  <div className="items-center min-w-full">
+                    <Link href={`/users/${accommodation?.hostId}`} className="flex-grow cursor">
+                      {["Entire place", "Private room", "Shared room"][accommodation.placeType]}{" "}
+                      hosted by {user?.firstName} {user?.lastName}
+                    </Link>{" "}
                     <AccommodationReviewsSummary accommodationId={accommodation.id} />
                   </div>
-                </div>
-              </h1>
+                </h1>
+              </div>
               <UserSpecific userId={accommodation.hostId}>
                 <Link href={`/accommodations/${accommodation.id}/edit`}>
                   <Button>Edit</Button>

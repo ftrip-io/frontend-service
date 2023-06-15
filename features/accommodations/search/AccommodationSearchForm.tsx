@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import { DatepickerInput } from "../../../core/components/DatepickerInput";
 import { SimpleTextInput } from "../../../core/components/SimpleTextInput";
 import IntegerInput from "../../../core/components/IntegerInput";
@@ -32,7 +32,11 @@ export const AccommodationSearchForm: FC<SearchAccommodationsFormProps> = ({
         </div>
         <div>
           <label className="block text-lg font-medium text-gray-700">Guest Number: </label>
-          <IntegerInput value={guestNum} onChange={(value) => changeFilter({ guestNum: value })} />
+          <IntegerInput
+            min={1}
+            value={guestNum}
+            onChange={(value) => changeFilter({ guestNum: value })}
+          />
         </div>
         <div>
           <DatepickerInput

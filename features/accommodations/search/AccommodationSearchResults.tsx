@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { AccommodationSearchInfo } from "./SearchFilterModels";
 import { AccommodationSearchResultCard } from "./AccommodationSearchResultCard";
 
@@ -7,7 +7,7 @@ export const AccommodationSearchResults: FC<{
 }> = ({ accommodationSearchResults }) => {
   if (!accommodationSearchResults) return <></>;
 
-  if (!accommodationSearchResults.length) return <p>Nema rezultata pretrage.</p>;
+  if (!accommodationSearchResults.length) return <p>No search results.</p>;
 
   return (
     <>

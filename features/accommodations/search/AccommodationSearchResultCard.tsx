@@ -1,8 +1,11 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { AccommodationSearchInfo } from "./SearchFilterModels";
 import { Button } from "../../../core/components/Button";
 import { usePhotos } from "../usePhotos";
 import { useRouter } from "next/router";
+import { Authorized } from "../../../core/components/Authorized";
+import { AuthUserType } from "../../../core/contexts/Auth";
+import Link from "next/link";
 
 export const AccommodationSearchResultCard: FC<{
   accommodationInfo: AccommodationSearchInfo;
@@ -18,13 +21,20 @@ export const AccommodationSearchResultCard: FC<{
     });
   };
 
+  const canBeBooked =
+    accommodationInfo.totalPrice !== undefined && accommodationInfo.totalPrice !== null;
+
   return (
     <>
       <div className="bg-white rounded-lg shadow-md flex mt-5">
         <img src={photoUrls?.[0]} className="w-1/3 h-60 object-cover rounded-lg" />
         <div className="p-4 flex flex-col justify-between flex-grow">
           <div>
-            <h2 className="text-2xl font-bold">{accommodationInfo.title}</h2>
+            <h2 className="text-2xl font-bold">
+              <Link href={`/accommodations/${accommodationInfo.accommodationId}`}>
+                {accommodationInfo.title}
+              </Link>
+            </h2>
             <h6 className="text-sm font-semibold mb-2">
               {accommodationInfo.location.city}, {accommodationInfo.location.region},{" "}
               {accommodationInfo.location.country}
@@ -52,16 +62,28 @@ export const AccommodationSearchResultCard: FC<{
                 Price per unit: {accommodationInfo.price}$
               </p>
             )}
-            <p className="text-lg font-semibold text-gray-800 mb-4">
-              Total price: {accommodationInfo.totalPrice}$
-            </p>
+            {canBeBooked ? (
+              <p className="text-lg font-semibold text-gray-800 mb-4">
+                Total price: {accommodationInfo.totalPrice}$
+              </p>
+            ) : (
+              <></>
+            )}
 
-            <Button
-              onClick={handleButtonClick}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Book Now
-            </Button>
+            {canBeBooked ? (
+              <Authorized roles={[AuthUserType.Guest]}>
+                <Button
+                  onClick={handleButtonClick}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Book Now
+                </Button>
+              </Authorized>
+            ) : (
+              <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <Link href={`/accommodations/${accommodationInfo.accommodationId}`}>Check Out</Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

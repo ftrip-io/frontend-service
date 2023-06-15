@@ -11,9 +11,10 @@ import { notifications } from "../../../core/hooks/useNotifications";
 import { useRequestsResult } from "../../requests/useRequestsResult";
 import { ResultStatus } from "../../../core/contexts/Result";
 import { extractErrorMessage } from "../../../core/utils/errors";
-import { useAuthContext } from "../../../core/contexts/Auth";
+import { AuthUserType, useAuthContext } from "../../../core/contexts/Auth";
 import { type CreateReservationRequest } from "../../requests/ReservationRequestsModels";
 import { useRouter } from "next/router";
+import { Authorized } from "../../../core/components/Authorized";
 
 type BookingCardProps = {
   id: string;
@@ -53,7 +54,7 @@ export const BookingCard: FC<BookingCardProps> = ({
     },
     onError: (error: any) => {
       const messages = extractErrorMessage(error).split("\n");
-      for (let message of messages) {
+      for (const message of messages) {
         notifications.error(message);
       }
 
@@ -95,24 +96,27 @@ export const BookingCard: FC<BookingCardProps> = ({
         <label className="text-xs">GUESTS</label>
         <IntegerInput onChange={setGuests} value={guests} min={minGuests} max={maxGuests} />
       </div>
-      <div className="mt-2 w-full">
-        <Button
-          className="w-full"
-          onClick={() =>
-            createRequestAction({
-              guestId,
-              accomodationId: id,
-              guestNumber: guests,
-              datePeriod: {
-                dateFrom: checkIn as Date,
-                dateTo: checkOut as Date,
-              },
-            })
-          }
-        >
-          Reserve
-        </Button>
-      </div>
+
+      <Authorized roles={[AuthUserType.Guest]}>
+        <div className="mt-2 w-full">
+          <Button
+            className="w-full"
+            onClick={() =>
+              createRequestAction({
+                guestId,
+                accomodationId: id,
+                guestNumber: guests,
+                datePeriod: {
+                  dateFrom: checkIn as Date,
+                  dateTo: checkOut as Date,
+                },
+              })
+            }
+          >
+            Reserve
+          </Button>
+        </div>
+      </Authorized>
       {priceInfo && (
         <>
           <p className="my-3 underline cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
