@@ -15,6 +15,10 @@ const links: MenuItem[] = [
     title: "Notifications",
     path: "/settings/notifications",
   },
+  {
+    title: "Delete",
+    path: "/settings/delete",
+  },
 ];
 
 export const SettingsLayout: FC<PropsWithChildren> = ({ children }) => {
