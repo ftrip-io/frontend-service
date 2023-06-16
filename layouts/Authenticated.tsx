@@ -38,7 +38,7 @@ const NavigationButton = () => {
     <>
       <button
         type="button"
-        className="rounded-full p-1 bg-gray-800 hover:text-white"
+        className="rounded-full p-1 hover:text-gray-400"
         onClick={navigateToNotifications}
         {...hoverAttributes}
       >
@@ -56,7 +56,10 @@ const NavigationButton = () => {
                   filter:
                     "invert(13%) sepia(97%) saturate(7455%) hue-rotate(5deg) brightness(102%) contrast(103%)",
                 }
-              : {}
+              : {
+                  filter:
+                    "invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%)",
+                }
           }
         >
           <path
@@ -107,7 +110,7 @@ export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
                         <div>
-                          <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                          <Menu.Button className="flex max-w-xs items-center rounded-full text-sm text-white hover:text-gray-400">
                             <span className="sr-only">Open user menu</span>
                             Profile Image
                           </Menu.Button>
@@ -146,7 +149,7 @@ export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
                     <NavigationButton />
 
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XMarkIcon className="block h-6 w-6" aria-hidden="true" />

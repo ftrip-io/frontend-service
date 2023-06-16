@@ -10,8 +10,9 @@ import { UserSpecific } from "../../../core/components/UserSpecific";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { HostReviewsSummary } from "../../../features/reviews/hosts/HostReviewsSummary";
+import { useAuthContext } from "../../../core/contexts/Auth";
 
-function getSharedLinks(router: NextRouter, user: User) {
+function getSharedLinks(router: NextRouter, user: User, authUserId: string) {
   return [
     {
       title: "Reservation Requests",
@@ -20,6 +21,7 @@ function getSharedLinks(router: NextRouter, user: User) {
       onClick: async () => {
         await router.push(`/users/${user?.id}/reservation-requests`);
       },
+      show: () => user?.id === authUserId,
     },
     {
       title: "Reservations",
@@ -28,13 +30,14 @@ function getSharedLinks(router: NextRouter, user: User) {
       onClick: async () => {
         await router.push(`/users/${user?.id}/reservations`);
       },
+      show: () => user?.id === authUserId || user?.type === UserType.Guest,
     },
   ];
 }
 
-function getLinksForGuest(router: NextRouter, user: User) {
+function getLinksForGuest(router: NextRouter, user: User, authUserId: string) {
   return [
-    ...getSharedLinks(router, user),
+    ...getSharedLinks(router, user, authUserId),
     {
       title: "Accommodation Reviews",
       icon: <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500" />,
@@ -54,9 +57,9 @@ function getLinksForGuest(router: NextRouter, user: User) {
   ];
 }
 
-function getLinksForHost(router: NextRouter, user: User) {
+function getLinksForHost(router: NextRouter, user: User, authUserId: string) {
   return [
-    ...getSharedLinks(router, user),
+    ...getSharedLinks(router, user, authUserId),
     {
       title: "Reviews",
       icon: <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500" />,
@@ -101,6 +104,7 @@ export const ProfileLayout: FC<PropsWithChildren> = ({ children }) => {
 
   const { result, setResult } = useUsersResult();
 
+  const authUserId = useAuthContext().user?.id ?? "";
   const userId = router.query?.id?.toString() ?? "";
   const { user } = useUser(userId, [result]);
 
@@ -110,7 +114,7 @@ export const ProfileLayout: FC<PropsWithChildren> = ({ children }) => {
   }, [result, setResult]);
 
   const linksFactory = user?.type === UserType.Guest ? getLinksForGuest : getLinksForHost;
-  const links = linksFactory(router, user);
+  const links = linksFactory(router, user, authUserId);
 
   if (!userId || !user) return <></>;
 
