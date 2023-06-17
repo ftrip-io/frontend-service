@@ -127,7 +127,7 @@ export const AccommodationEditPage: FC<{ id: string }> = ({ id }) => {
             <h4 className="font-semibold">Title</h4>
             <p>{accommodation.title}</p>
             <h4 className="font-semibold">Description</h4>
-            <pre>{accommodation.description}</pre>
+            <pre className="whitespace-pre-wrap">{accommodation.description}</pre>
           </div>
           <div>
             <EditButton formName="title" />
@@ -166,7 +166,7 @@ export const AccommodationEditPage: FC<{ id: string }> = ({ id }) => {
         <div className="border-b-2 p-2 flex justify-between">
           <div>
             <h4 className="font-semibold">House rules</h4>
-            <pre>{accommodation.houseRules}</pre>
+            <pre className="whitespace-pre-wrap">{accommodation.houseRules}</pre>
           </div>
           <div>
             <EditButton formName="houseRules" />

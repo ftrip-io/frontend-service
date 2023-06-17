@@ -13,9 +13,9 @@ export function usePhotos(id: string, dependencies: any[] = [], updated?: string
   );
 
   return {
-    photoUrls:
-      updated ??
-      ((data?.data as string[]) ?? []).map((p) => `${config.imageServicePath}/photoService/${p}`),
+    photoUrls: (updated ?? (data?.data as string[]) ?? []).map((p) =>
+      p.startsWith("http") ? p : `${config.imageServicePath}/${p}`
+    ),
     isLoading: isFetching,
     error: (error as any)?.response?.data,
   };

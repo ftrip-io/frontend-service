@@ -3,7 +3,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     imageServicePath: `http://${process.env.IMAGE_SERVICE_HOSTNAME || "localhost"}:${
       process.env.IMAGE_SERVICE_PORT || "3001"
-    }`,
+    }${process.env.IMAGE_SERVICE_HOSTNAME ? "/photoService" : ""}`,
   },
   output: "standalone",
   swcMinify: true,

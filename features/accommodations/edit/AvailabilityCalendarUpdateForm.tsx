@@ -8,6 +8,8 @@ import { Button } from "../../../core/components/Button";
 import { useAction } from "../../../core/hooks/useAction";
 import { CalendarForm } from "../creation/CalendarForm";
 import { type AccommodationUpdateFormProps } from "./AccommodationEditPage";
+import { useReservationsByAccommodation } from "../../reservations/useReservations";
+import moment from "moment";
 
 const AvailabilityCalendarUpdateForm: FC<AccommodationUpdateFormProps> = ({
   accommodation,
@@ -18,6 +20,11 @@ const AvailabilityCalendarUpdateForm: FC<AccommodationUpdateFormProps> = ({
   const [update, setUpdate] = useState<UpdateAccommodationAvailabilities>({
     availabilities: [...accommodation.availabilities],
     bookingAdvancePeriod: accommodation.bookingAdvancePeriod,
+  });
+  const { reservations } = useReservationsByAccommodation(accommodation.id, {
+    dateFrom: moment().format("YYYY-MM-DD"),
+    dateTo: "",
+    includeCancelled: "0",
   });
 
   const updateAccommodationAction = useAction<UpdateAccommodationAvailabilities, Accommodation>(
@@ -35,6 +42,7 @@ const AvailabilityCalendarUpdateForm: FC<AccommodationUpdateFormProps> = ({
       <CalendarForm
         {...update}
         updateFields={(fields) => setUpdate((prev) => ({ ...prev, ...fields }))}
+        reservations={reservations}
       />
       <div className="flex flex-wrap justify-between mt-10">
         <Button type="button" onClick={onCancel}>

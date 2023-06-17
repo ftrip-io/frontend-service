@@ -13,5 +13,5 @@ export const HostReviewsSummary: FC<HostReviewsSummaryProps> = ({ hostId }) => {
 
   const { reviewsCount, grades } = summary || {};
 
-  return <ReviewsSummary reviewsCount={reviewsCount} averageGrade={grades.average} />;
+  return <ReviewsSummary reviewsCount={reviewsCount} averageGrade={grades?.average} />;
 };
