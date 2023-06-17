@@ -14,7 +14,7 @@ import type { AccomodationGradesSummary, AccomodationReview } from "./Accommodat
 
 const SummaryGradesHeader: FC<{ grades: AccomodationGradesSummary }> = ({ grades }) => {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="lg:grid lg:grid-cols-3 gap-3">
       <Grade title="Accommodation" grade={grades.accomodation} />
       <Grade title="Location" grade={grades.location} />
       <Grade title="Value for money" grade={grades.valueForMoney} />

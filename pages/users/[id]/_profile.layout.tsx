@@ -7,7 +7,7 @@ import { type User, UserType } from "../../../features/users/UserModels";
 import { VerticalMenu } from "../../../core/components/VerticalMenu";
 import { useUsersResult } from "../../../features/users/useUsersResult";
 import { UserSpecific } from "../../../core/components/UserSpecific";
-import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon, HomeIcon } from "@heroicons/react/24/outline";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { HostReviewsSummary } from "../../../features/reviews/hosts/HostReviewsSummary";
 import { useAuthContext } from "../../../core/contexts/Auth";
@@ -59,6 +59,14 @@ function getLinksForGuest(router: NextRouter, user: User, authUserId: string) {
 
 function getLinksForHost(router: NextRouter, user: User, authUserId: string) {
   return [
+    {
+      title: "Accommodations",
+      icon: <HomeIcon className="h-6 w-6 text-gray-500" />,
+      path: "/users/[id]/accommodations",
+      onClick: async () => {
+        await router.push(`/users/${user?.id}/accommodations`);
+      },
+    },
     ...getSharedLinks(router, user, authUserId),
     {
       title: "Reviews",
@@ -88,13 +96,20 @@ const UserInformations: FC<UserInformationsProps> = ({ user }) => {
         <div className="text-xl">{user.city}</div>
       </div>
 
-      <div className="flex">
-        <UserSpecific userId={user.id}>
+      <UserSpecific userId={user.id}>
+        <div className="flex">
           <Button className="grow">
             <Link href={"/settings"}>Change profile info</Link>
           </Button>
-        </UserSpecific>
-      </div>
+        </div>
+        <div className="flex">
+          {user?.type === UserType.Host && (
+            <Button className="grow mt-3">
+              <Link href={"/accommodations/new"}>New accommodation</Link>
+            </Button>
+          )}
+        </div>
+      </UserSpecific>
     </>
   );
 };
@@ -119,22 +134,20 @@ export const ProfileLayout: FC<PropsWithChildren> = ({ children }) => {
   if (!userId || !user) return <></>;
 
   return (
-    <>
-      <div className="flex">
-        <div>
-          <aside className="w-96" aria-label="Sidebar">
-            <div className="overflow-y-auto py-4 px-3 bg-gray-50 rounded">
-              <UserInformations user={user} />
+    <div className="md:flex">
+      <div>
+        <aside className="w-96" aria-label="Sidebar">
+          <div className="overflow-y-auto py-4 px-3 bg-gray-50 rounded">
+            <UserInformations user={user} />
 
-              <div className="pt-4 mt-4 space-y-2 border-t border-gray-200" />
+            <div className="pt-4 mt-4 space-y-2 border-t border-gray-200" />
 
-              <VerticalMenu links={links} />
-            </div>
-          </aside>
-        </div>
-        <div className="grow">{children}</div>
+            <VerticalMenu links={links} />
+          </div>
+        </aside>
       </div>
-    </>
+      <div className="grow">{children}</div>
+    </div>
   );
 };
 

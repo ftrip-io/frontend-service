@@ -14,19 +14,23 @@ import { Button } from "../../../core/components/Button";
 import { AccommodationReviewsSummary } from "../../reviews/accommodations/AccommodationReviewsSummary";
 import { AccommodationReviews } from "../../reviews/accommodations/AccommodationReviews";
 import Link from "next/link";
+import { useReservationsByAccommodation } from "../../reservations/useReservations";
 
 const MapPreview = dynamic(() => import("./MapPreview"), { ssr: false });
 
-const CoverImage: FC<{ url: string; className?: string }> = ({ url, className = "" }) => (
-  <Image
-    src={url}
-    alt="image"
-    width={1000}
-    height={1000}
-    className={`h-full w-full object-cover ${className}`}
-    priority={true}
-  />
-);
+const CoverImage: FC<{ url: string; className?: string }> = ({ url, className = "" }) =>
+  url ? (
+    <Image
+      src={url}
+      alt="image"
+      width={1000}
+      height={1000}
+      className={`h-full w-full object-cover ${className}`}
+      priority={true}
+    />
+  ) : (
+    <div className={`h-full w-full object-cover bg-gray-100 ${className}`} />
+  );
 
 export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
   const router = useRouter();
@@ -41,6 +45,12 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
   const [period, setPeriod] = useState<{ checkIn?: Date; checkOut?: Date }>({
     checkIn: fromDate ? moment(fromDate).startOf("day").toDate() : undefined,
     checkOut: toDate ? moment(toDate).endOf("day").toDate() : undefined,
+  });
+
+  const { reservations } = useReservationsByAccommodation(id, {
+    dateFrom: moment().format("YYYY-MM-DD"),
+    dateTo: "",
+    includeCancelled: "0",
   });
 
   if (!accommodation) return <></>;
@@ -112,7 +122,7 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
             </p>
           </div>
           <div className="border-b-2 py-4">
-            <pre>{accommodation.description}</pre>
+            <pre className="whitespace-pre-wrap">{accommodation.description}</pre>
           </div>
           <div className="border-b-2 py-4">
             <h1 className="text-xl font-semibold my-3">What this place offers</h1>
@@ -138,6 +148,7 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
             <h1 className="text-xl font-semibold my-3">Calendar</h1>
             <CalendarPreview
               availabilities={accommodation.availabilities}
+              reservations={reservations}
               bookingAdvancePeriod={accommodation.bookingAdvancePeriod}
               minDays={accommodation.minNights}
               maxDays={accommodation.maxNights}
@@ -157,7 +168,7 @@ export const AccommodationPage: FC<{ id: string }> = ({ id }) => {
       <div className="border-b-2 py-4">
         <h1 className="text-xl font-semibold my-3">Things to know</h1>
         <div>
-          <pre>{accommodation.houseRules}</pre>
+          <pre className="whitespace-pre-wrap">{accommodation.houseRules}</pre>
         </div>
       </div>
       <div className="border-b-2 py-4">

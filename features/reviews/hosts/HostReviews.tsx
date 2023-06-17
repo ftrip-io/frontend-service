@@ -14,7 +14,7 @@ import type { HostReview, HostGradesSummary } from "./HostReviewModels";
 
 const SummaryGradesHeader: FC<{ grades: HostGradesSummary }> = ({ grades }) => {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="lg:grid lg:grid-cols-2 gap-3">
       <Grade title="Communication" grade={grades.communication} />
       <Grade title="Overall" grade={grades.overall} />
     </div>
@@ -29,7 +29,7 @@ const HostReview: FC<{ review: HostReview }> = ({ review }) => {
         <div className="py-2 px-4 bg-white rounded-lg border border-gray-200 shadow-sm">
           <div className="mb-2">
             <div className="flex space-x-1 ">
-              <Link href={`/users/${review.guestId}`}>{review.guest} gradded this host with </Link>
+              <Link href={`/users/${review.guestId}`}>{review.guest} graded this host with </Link>
               <div className="flex items-center">
                 {review.grades.average.toPrecision(3)} <Star />
               </div>
