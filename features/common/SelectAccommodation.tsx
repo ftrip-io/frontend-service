@@ -1,10 +1,9 @@
 import { type FC } from "react";
-import { type Accommodation } from "../accommodations/AccommodationModels";
-import { useAccommodationsMap } from "../accommodations/useAccommodationsMap";
 import { SelectOptionField } from "../../core/components/SelectOptionField";
+import { type AccommodationSearchInfo } from "../accommodations/search/SearchFilterModels";
 
 export type SelectAccomodationProps = {
-  accommodations: Accommodation[];
+  accommodations: AccommodationSearchInfo[];
   accommodationId: string;
   onAccommodationSelected: (accommodationId: string) => any;
 };
@@ -14,25 +13,17 @@ export const SelectAccomodation: FC<SelectAccomodationProps> = ({
   accommodationId,
   onAccommodationSelected,
 }) => {
-  // NOTE: FIX THIS
-  const accommodationIds = accommodations?.map(
-    (accommodation: any) => accommodation.accommodationId
-  );
-  const { accommodationsMap } = useAccommodationsMap(accommodationIds);
-
-  const accommodationOptions = accommodations?.map((accommodation: any) => ({
-    label: accommodationsMap[accommodation.accommodationId]?.title,
+  const accommodationOptions = accommodations?.map((accommodation) => ({
+    label: accommodation.title,
     value: accommodation.accommodationId,
   }));
 
   return (
-    <>
-      <SelectOptionField
-        label="Accommodation"
-        options={accommodationOptions}
-        value={accommodationId}
-        onChange={onAccommodationSelected}
-      />
-    </>
+    <SelectOptionField
+      label="Accommodation"
+      options={accommodationOptions}
+      value={accommodationId}
+      onChange={onAccommodationSelected}
+    />
   );
 };

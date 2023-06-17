@@ -166,7 +166,7 @@
 }
 
 .react-calendar__tile--reserved {
-  background-color: rgb(233, 209, 101);
+  background-color: rgb(233, 209, 101) !important;
 }
 
 .react-calendar__navigation__next2-button {

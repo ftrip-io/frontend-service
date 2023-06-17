@@ -8,15 +8,18 @@ import { type CreateAccommodation } from "../accommodationActions";
 import { type Availability } from "../AccommodationModels";
 import { Button } from "../../../core/components/Button";
 import RadioGroup from "../../../core/components/RadioGroup";
+import { Reservation } from "../../reservations/ReservationsModels";
 
 type CalendarFormProps = {
   updateFields: (fields: Partial<CreateAccommodation>) => void;
   bookingAdvancePeriod: number;
   availabilities: Availability[];
+  reservations?: Reservation[];
 };
 
 const AVAILABLE_CLASS = "react-calendar__tile--available" as const;
 const DISABLED_CLASS = "react-calendar__tile--disabled" as const;
+const RESERVED_CLASS = "react-calendar__tile--reserved" as const;
 
 export const bookingAdvancePeriodLabels: { [v: string]: string } = {
   "0": "Any time",
@@ -31,8 +34,15 @@ const addAvailability = (
   start: Date,
   end: Date,
   isAvailable: boolean,
-  availabilities: Availability[]
+  availabilities: Availability[],
+  reservations?: Reservation[]
 ) => {
+  if (
+    !isAvailable &&
+    reservations?.some((r) => start <= r.datePeriod.dateTo && r.datePeriod.dateFrom <= end)
+  ) {
+    return availabilities;
+  }
   let overlaps: Availability | undefined;
   let overlapped: Availability | undefined;
   let during: Availability | undefined;
@@ -104,12 +114,19 @@ export const CalendarForm: FC<CalendarFormProps> = ({
   updateFields,
   bookingAdvancePeriod,
   availabilities,
+  reservations,
 }) => {
-  const [selectedRange, setSelectedRange] = useState<[Date, Date]>();
+  const [selectedRange, setSelectedRange] = useState<Date[]>([]);
 
-  const tileDisabled: TileDisabledFunc = useCallback(({ date, view }) => {
-    return view === "month" && date < new Date();
-  }, []);
+  const tileDisabled: TileDisabledFunc = useCallback(
+    ({ date, view }) => {
+      return (
+        (view === "month" && date < new Date()) ||
+        !!reservations?.some((r) => r.datePeriod.dateFrom <= date && r.datePeriod.dateTo >= date)
+      );
+    },
+    [reservations]
+  );
 
   const tileClassName: TileClassNameFunc = ({ date, view }) => {
     if (view !== "month") return;
@@ -120,23 +137,28 @@ export const CalendarForm: FC<CalendarFormProps> = ({
     if (bookingAdvancePeriod >= 0 && (!bookingAdvancePeriod || date < bookingEnd))
       return availabilities.some((a) => a.fromDate <= date && a.toDate >= date && !a.isAvailable)
         ? DISABLED_CLASS
+        : reservations?.some((r) => r.datePeriod.dateFrom <= date && r.datePeriod.dateTo >= date)
+        ? RESERVED_CLASS
         : AVAILABLE_CLASS;
     return availabilities.some((a) => a.fromDate <= date && a.toDate >= date && a.isAvailable)
-      ? AVAILABLE_CLASS
+      ? reservations?.some((r) => r.datePeriod.dateFrom <= date && r.datePeriod.dateTo >= date)
+        ? RESERVED_CLASS
+        : AVAILABLE_CLASS
       : DISABLED_CLASS;
   };
 
   const saveSelection = (isAvailable: boolean) => {
-    if (!selectedRange) return;
+    if (!selectedRange.length) return;
     updateFields({
       availabilities: addAvailability(
         selectedRange[0],
         selectedRange[1],
         isAvailable,
-        availabilities
+        availabilities,
+        reservations
       ),
     });
-    setSelectedRange(undefined);
+    setSelectedRange([]);
   };
 
   return (
@@ -151,7 +173,7 @@ export const CalendarForm: FC<CalendarFormProps> = ({
             onChange={(v) => setSelectedRange(v as [Date, Date])}
           />
         </div>
-        {selectedRange && (
+        {selectedRange.length === 2 && (
           <div>
             <Button type="button" onClick={() => saveSelection(false)} className="m-2">
               Block interval
@@ -159,7 +181,7 @@ export const CalendarForm: FC<CalendarFormProps> = ({
             <Button type="button" onClick={() => saveSelection(true)} className="m-2">
               Unblock interval
             </Button>
-            <Button type="button" onClick={() => setSelectedRange(undefined)} className="m-2">
+            <Button type="button" onClick={() => setSelectedRange([])} className="m-2">
               Clear selection
             </Button>
           </div>

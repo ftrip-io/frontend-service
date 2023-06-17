@@ -41,21 +41,23 @@ export const ImageSlider: FC<{ images: string[]; width?: number; height?: number
   height = 1000,
 }) => {
   const { step, isFirstStep, isLastStep, back, next, goTo, currentStepIndex } = useMultistepForm(
-    images?.map((url) => (
-      <Image
-        src={url}
-        alt="image"
-        width={width}
-        height={height}
-        className="h-80 w-80 object-cover rounded-xl"
-        priority={true}
-        key={url}
-      />
-    )) ?? []
+    images?.length
+      ? images.map((url) => (
+          <Image
+            src={url}
+            alt="image"
+            width={width}
+            height={height}
+            className="h-72 w-72 object-cover rounded-xl"
+            priority={true}
+            key={url}
+          />
+        ))
+      : [<div className="h-72 w-72 object-cover rounded-xl bg-gray-100" key={0} />]
   );
 
   return (
-    <div className="w-80">
+    <div className="w-72">
       <div className="group relative">
         {!isFirstStep && (
           <button

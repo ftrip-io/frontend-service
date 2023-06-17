@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { type Accommodation } from "./AccommodationModels";
 import moment from "moment";
+import { AccommodationSearchInfo } from "./search/SearchFilterModels";
 
 export function useAccommodation(
   accommodationId: Accommodation["id"],
@@ -34,23 +35,17 @@ function convertDates(accommodation: Accommodation) {
   return accommodation;
 }
 
-// NOTE: This is for now, later we will migrate to endpoint from catalogService
 export function useAccommodationsByHost(hostId: string, dependencies: any[] = []) {
   const { data, isFetching, error } = useQuery(
     [`accommodations/${hostId}`, ...dependencies],
-    () =>
-      axios.get(`/bookingService/api/accommodations`, {
-        params: {
-          hostId,
-        },
-      }),
+    () => axios.get(`/catalogService/api/accommodations/by-host/${hostId}`),
     {
       enabled: dependencies?.reduce((acc, dep) => acc && !dep, true) && !!hostId,
     }
   );
 
   return {
-    accommodations: data?.data as Accommodation[],
+    accommodations: data?.data as AccommodationSearchInfo[],
     isLoading: isFetching,
     error: (error as any)?.response?.data,
   };

@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import type { Reservation } from "./ReservationsModels";
 import moment from "moment";
+import { convertDatesInResponse } from "../../core/utils/convertDates";
 
 type Filters = {
   dateFrom: string;
@@ -29,7 +30,7 @@ function useReservationsByGuest(guestId: string, filters: Filters, dependencies:
   );
 
   return {
-    reservations: data?.data as Reservation[],
+    reservations: convertDatesInResponse(data?.data as Reservation[]),
     isLoading: isFetching,
     error: (error as any)?.response?.data,
   };
@@ -47,7 +48,7 @@ function useReservationsByAccommodation(
         params: {
           accommodationId,
           ...(filters.includeCancelled !== ""
-            ? { includeCancelled: filters.includeCancelled === "1" ? true : false }
+            ? { includeCancelled: filters.includeCancelled === "1" }
             : {}),
           ...(filters.dateFrom ? { periodFrom: moment(filters.dateFrom).format() } : {}),
           ...(filters.dateTo ? { periodTo: moment(filters.dateTo).format() } : {}),
@@ -59,7 +60,7 @@ function useReservationsByAccommodation(
   );
 
   return {
-    reservations: data?.data as Reservation[],
+    reservations: convertDatesInResponse(data?.data as Reservation[]),
     isLoading: isFetching,
     error: (error as any)?.response?.data,
   };

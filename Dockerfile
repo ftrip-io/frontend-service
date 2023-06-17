@@ -20,6 +20,10 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+ENV IMAGE_SERVICE_PORT=80
+ENV IMAGE_SERVICE_HOSTNAME=http-proxy
+ENV API_PROXY_URL=http://http-proxy:80
+
 RUN npm run build
 
 # If using npm comment out above and use below instead
@@ -42,6 +46,7 @@ COPY --from=builder /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/next.config.js ./
 
 USER nextjs
 
