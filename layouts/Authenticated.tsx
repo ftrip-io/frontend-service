@@ -90,16 +90,7 @@ export const AuthenticatedLayout: FC<PropsWithChildren> = ({ children }) => {
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <Link href="/">
-                        <Image
-                          width={40}
-                          height={40}
-                          style={{
-                            filter: "invert(100%)",
-                          }}
-                          src="/ftrip-io.png"
-                          alt=""
-                          priority={true}
-                        />
+                        <Image width={64} height={40} src="/ftrip-io.png" alt="" priority={true} />
                       </Link>
                     </div>
                   </div>

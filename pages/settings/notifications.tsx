@@ -13,4 +13,6 @@ const NotificationTypes = () => {
   );
 };
 
+NotificationTypes.requireAuth = true;
+
 export default NotificationTypes;

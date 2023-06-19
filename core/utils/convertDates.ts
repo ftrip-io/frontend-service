@@ -2,6 +2,8 @@ import moment from "moment";
 import { type DatePeriod } from "../../types";
 
 export function convertDatesInResponse<T extends { datePeriod: DatePeriod }>(objects: T[]) {
+  if (!objects) return objects;
+
   for (const o of objects) {
     if (typeof o.datePeriod.dateFrom === "string")
       o.datePeriod.dateFrom = moment(o.datePeriod.dateFrom).startOf("day").toDate();

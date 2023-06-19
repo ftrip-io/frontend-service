@@ -13,4 +13,6 @@ const Profile = () => {
   );
 };
 
+Profile.requireAuth = true;
+
 export default Profile;

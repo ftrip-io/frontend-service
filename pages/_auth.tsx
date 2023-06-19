@@ -26,7 +26,7 @@ export const AuthComponentWrapper: FC<AuthComponentWrapperProps> = ({
 
   useEffect(() => {
     if (requireAuth && !authorized) {
-      router && !calledPush && router.push("/auth");
+      router && !calledPush && router.push("/logout");
       setCalledPush(true);
       return;
     }
