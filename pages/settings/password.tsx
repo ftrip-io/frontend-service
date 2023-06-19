@@ -13,4 +13,6 @@ const ChangePassword = () => {
   );
 };
 
+ChangePassword.requireAuth = true;
+
 export default ChangePassword;

@@ -6,13 +6,18 @@ export const AccommodationSearchResults: FC<{
   accommodationSearchResults: AccommodationSearchInfo[];
 }> = ({ accommodationSearchResults }) => {
   if (!accommodationSearchResults) return <></>;
-  if (!accommodationSearchResults.length) return <p>No search results.</p>;
+
+  if (!accommodationSearchResults.length)
+    return <h1 className="my-5 text-center">No search results.</h1>;
 
   return (
-    <div className="md:grid md:grid-cols-2 gap-3">
+    <>
       {accommodationSearchResults?.map((accommodationInfo, i) => (
-        <AccommodationSearchResultCard accommodationInfo={accommodationInfo} key={i} />
+        <AccommodationSearchResultCard
+          accommodationInfo={accommodationInfo}
+          key={accommodationInfo.accommodationId}
+        />
       ))}
-    </div>
+    </>
   );
 };
