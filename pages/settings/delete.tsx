@@ -13,4 +13,6 @@ const DeleteUser = () => {
   );
 };
 
+DeleteUser.requireAuth = true;
+
 export default DeleteUser;

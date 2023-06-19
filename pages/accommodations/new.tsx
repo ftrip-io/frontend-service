@@ -1,3 +1,4 @@
+import { AuthUserType } from "../../core/contexts/Auth";
 import { AccomodationMultiStepForm } from "../../features/accommodations/creation/AccommodationMultiStepForm";
 
 const NewAccommodation = () => {
@@ -9,5 +10,8 @@ const NewAccommodation = () => {
     </>
   );
 };
+
+NewAccommodation.requireAuth = true;
+NewAccommodation.allowedRoles = [AuthUserType.Host];
 
 export default NewAccommodation;

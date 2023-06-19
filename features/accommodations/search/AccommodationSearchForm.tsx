@@ -52,7 +52,7 @@ export const AccommodationSearchForm: FC<SearchAccommodationsFormProps> = ({
             onChange={(value) => changeFilter({ toDate: value })}
           />
         </div>
-        <div>
+        <div className="col-span-2 grid justify-items-end">
           <Button onClick={() => onFiltersChange(filters)}>Search</Button>
         </div>
       </div>

@@ -24,7 +24,7 @@ const links: MenuItem[] = [
 export const SettingsLayout: FC<PropsWithChildren> = ({ children }) => {
   const { user } = useAuthContext();
 
-  if (!user) return <></>;
+  if (!user || !user.id) return <></>;
 
   return (
     <>
