@@ -16,7 +16,7 @@ export function usePhotos(id: string, dependencies: any[] = [], updated?: string
     photoUrls: (updated ?? (data?.data as string[]) ?? []).map((p) =>
       p.startsWith("http")
         ? p
-        : window.location.host === "localhost"
+        : window?.location?.host === "localhost"
         ? `${config.imageServicePath}/${p}`
         : `/photoService/${p}`
     ),
