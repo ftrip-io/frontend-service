@@ -14,7 +14,11 @@ export function usePhotos(id: string, dependencies: any[] = [], updated?: string
 
   return {
     photoUrls: (updated ?? (data?.data as string[]) ?? []).map((p) =>
-      p.startsWith("http") ? p : `${config.imageServicePath}/${p}`
+      p.startsWith("http")
+        ? p
+        : window.location.host === "localhost"
+        ? `${config.imageServicePath}/${p}`
+        : `/photoService/${p}`
     ),
     isLoading: isFetching,
     error: (error as any)?.response?.data,
