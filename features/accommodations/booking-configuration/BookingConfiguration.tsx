@@ -53,7 +53,7 @@ export const BookingConfiguration: FC<BookingConfigurationProps> = ({ accommodat
             })
           }
         >
-          {bookingConfiguration.isManualAccept ? "Disable" : "Enable"}
+          {bookingConfiguration.isManualAccept ? "Enable" : "Disable"}
         </Button>
       </div>
     </>
