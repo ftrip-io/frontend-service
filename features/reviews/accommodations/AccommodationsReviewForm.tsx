@@ -18,6 +18,7 @@ import { extractErrorMessage } from "../../../core/utils/errors";
 import { usePossibleAccommodationsForReview } from "./usePossibleAccommodationsForReview";
 import { SelectOptionField } from "../../../core/components/SelectOptionField";
 import { type AccomodationReview } from "./AccommodationReviewModels";
+import { useAccommodationsMap } from "../../accommodations/useAccommodationsMap";
 
 type AccommodationsReviewFormProps = {
   isEdit?: boolean;
@@ -33,12 +34,18 @@ export const AccommodationsReviewForm: FC<AccommodationsReviewFormProps> = ({
 
   const guestId = useAuthContext().user?.id ?? "";
   const { accommodations } = usePossibleAccommodationsForReview(guestId, [result]);
+  const { accommodationsMap } = useAccommodationsMap(accommodations);
+
   const accommodationOptions = useMemo(() => {
-    return accommodations?.map((accommodation: string) => ({
-      label: accommodation,
-      value: accommodation,
-    }));
-  }, [accommodations]);
+    const defaultOption = [{ label: "Choose accommodation", value: "" }];
+    const accommodationOptions =
+      accommodations?.map((accommodation: string) => ({
+        label: accommodationsMap[accommodation]?.title,
+        value: accommodation,
+      })) ?? [];
+
+    return defaultOption.concat(accommodationOptions);
+  }, [accommodations, accommodationsMap]);
 
   const {
     register: reviewForm,

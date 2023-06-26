@@ -13,6 +13,7 @@ import { ReviewHost, reviewHostAs, reviewHostScheme, updateHostReview } from "./
 import { usePossibleHostsForReview } from "./usePossibleHostsForReview";
 import { SelectOptionField } from "../../../core/components/SelectOptionField";
 import { type HostReview } from "./HostReviewModels";
+import { useUsersMap } from "../../users/useUsersMap";
 
 type HostsReviewFormProps = {
   isEdit?: boolean;
@@ -25,12 +26,18 @@ export const HostsReviewForm: FC<HostsReviewFormProps> = ({ isEdit, existingRevi
 
   const guestId = useAuthContext().user?.id ?? "";
   const { hosts } = usePossibleHostsForReview(guestId, [result]);
+  const { usersMap: hostsMap } = useUsersMap(hosts);
+
   const hostOptions = useMemo(() => {
-    return hosts?.map((host: string) => ({
-      label: host,
-      value: host,
-    }));
-  }, [hosts]);
+    const defaultOption = [{ label: "Choose host", value: "" }];
+
+    const hostOptions =
+      hosts?.map((host: string) => ({
+        label: `${hostsMap[host]?.firstName} ${hostsMap[host]?.lastName}`,
+        value: host,
+      })) ?? [];
+    return defaultOption.concat(hostOptions);
+  }, [hosts, hostsMap]);
 
   const {
     register: reviewForm,

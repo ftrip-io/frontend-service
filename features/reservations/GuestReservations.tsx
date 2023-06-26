@@ -3,7 +3,6 @@ import { useReservationsResult } from "./useReservationsResult";
 import { useReservationsByGuest } from "./useReservations";
 import { type Reservation } from "./ReservationsModels";
 import { useNotifications } from "../../core/hooks/useNotifications";
-import { useRequestsResult } from "../requests/useRequestsResult";
 import { useAccommodationsMap } from "../accommodations/useAccommodationsMap";
 import { useAction } from "../../core/hooks/useAction";
 import { cancelReservation } from "./reservationActions";
@@ -64,7 +63,7 @@ const ReservationRow: FC<{
 
 const ReservationsPage: FC<{ reservations: Reservation[] }> = ({ reservations }) => {
   const notificationsService = useNotifications();
-  const { setResult } = useRequestsResult();
+  const { setResult } = useReservationsResult();
 
   const accommodationIds = reservations?.map((reservation) => reservation.accomodationId) ?? [];
 
