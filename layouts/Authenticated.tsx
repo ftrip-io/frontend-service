@@ -1,4 +1,4 @@
-import { type FC, Fragment, type PropsWithChildren, useCallback } from "react";
+import { type FC, Fragment, type PropsWithChildren, useCallback, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AuthUser, useAuthContext } from "../core/contexts/Auth";
@@ -28,11 +28,17 @@ function classNames(...classes: any[]) {
 const NavigationButton = () => {
   const router = useRouter();
 
-  const { result } = useNotificationsResult();
+  const { result, setResult } = useNotificationsResult();
   const { notificationsCount } = useTNotificationsCount(getUserIdFromToken(), "false", [result]);
   const navigateToNotifications = useCallback(() => router.push("/notifications"), [router]);
 
   const { isHover, hoverAttributes } = useHoverable();
+
+  useEffect(() => {
+    if (!result) return;
+
+    if (result.type === "NEW_NOTIFICATION") setResult(undefined);
+  }, [result, setResult]);
 
   return (
     <>
