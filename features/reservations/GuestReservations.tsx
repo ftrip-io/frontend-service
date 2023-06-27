@@ -13,7 +13,6 @@ import moment from "moment";
 import Link from "next/link";
 import { ReservationsSearchForm } from "./ReservationsSearchForm";
 import { usePhotos } from "../accommodations/usePhotos";
-import { Button } from "../../core/components/Button";
 
 const ReservationRow: FC<{
   reservation: Reservation;

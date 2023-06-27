@@ -4,8 +4,6 @@ import { useRequestsResult } from "./useRequestsResult";
 import moment from "moment";
 import { useAccommodationsMap } from "../accommodations/useAccommodationsMap";
 import Link from "next/link";
-import { UserSpecific } from "../../core/components/UserSpecific";
-import { XCircleIcon } from "@heroicons/react/24/outline";
 import { ReservationRequestStatus, type ReservationRequest } from "./ReservationRequestsModels";
 import { useAction } from "../../core/hooks/useAction";
 import { deleteReservationRequest } from "./requestActions";
@@ -14,8 +12,8 @@ import { ResultStatus } from "../../core/contexts/Result";
 import { extractErrorMessage } from "../../core/utils/errors";
 import { ReservationRequestsSearchForm } from "./ReservationRequestsSearchForm";
 import { statusToText } from "./utils";
-import { Button } from "../../core/components/Button";
 import { usePhotos } from "../accommodations/usePhotos";
+import { UserSpecific } from "../../core/components/UserSpecific";
 
 const ReservationRequestRow: FC<{
   reservationRequest: ReservationRequest;
@@ -25,7 +23,7 @@ const ReservationRequestRow: FC<{
 
   return (
     <>
-      <div className="w-60 h-[390px] pb-[40px] bg-white rounded-2xl shadow flex-col justify-center items-center gap-4 inline-flex mb-4 m-1 mt-2">
+      <div className="w-60 h-[425px] pb-[20px] bg-white rounded-2xl shadow flex-col justify-center items-center gap-2 inline-flex m-1">
         <div className="w-60 h-[200px] shadow justify-center items-center inline-flex">
           {photoUrls.length ? (
             <img className="w-60 h-[200px]" src={photoUrls?.[0]} />
@@ -33,8 +31,8 @@ const ReservationRequestRow: FC<{
             <div className="w-60 h-[200px] bg-indigo-500 bg-opacity-80" />
           )}
         </div>
-        <div className="self-stretch h-[150px] px-4 pb-3 border-b flex-col justify-start items-center gap-3 flex">
-          <div className="self-stretch h-[135px] flex-col justify-center items-center gap-1.5 flex">
+        <div className="self-stretch h-[180px] px-4 pb-3 border-b flex-col justify-start items-center gap-3 flex">
+          <div className="self-stretch h-[170px] flex-col justify-center items-center gap-1.5 flex">
             {reservationRequest.status == ReservationRequestStatus.Accepted ? (
               <div className="w-[75px] h-[18px] px-5 py-3 ml-3 bg-green-200 rounded-lg justify-center items-center gap-[8px] inline-flex">
                 <div className="text-center text-white text-[14px] font-semibold leading-normal">
@@ -65,21 +63,23 @@ const ReservationRequestRow: FC<{
                 Total price: {reservationRequest.totalPrice}$
               </span>
             </div>
-            <div className="w-[228px] h-[18px] mt-2 text-right text-gray-900 text-opacity-80 text-[12px] font-normal leading-normal">
+            <div className="w-52 h-[18px] mt-2 text-right text-gray-900 text-opacity-80 text-[12px] font-normal leading-normal">
               Created {moment(reservationRequest.createdAt).fromNow()}
             </div>
           </div>
         </div>
 
         {reservationRequest.status === ReservationRequestStatus.Waiting ? (
-          <div className="w-[75px] h-[20px] px-5 py-3 ml-3 bg-indigo-500 rounded-lg justify-center items-center gap-[6px] inline-flex">
-            <button
-              className="text-center text-white text-[14px] font-semibold leading-normal"
-              onClick={onDeleteClick}
-            >
-              Delete
-            </button>
-          </div>
+          <UserSpecific userId={reservationRequest.guestId}>
+            <div className="w-[75px] h-[20px] px-5 py-3 ml-3 bg-indigo-500 rounded-lg justify-center items-center gap-[6px] inline-flex">
+              <button
+                className="text-center text-white text-[14px] font-semibold leading-normal"
+                onClick={onDeleteClick}
+              >
+                Delete
+              </button>
+            </div>
+          </UserSpecific>
         ) : (
           <></>
         )}
@@ -112,20 +112,18 @@ const ReservationRequestsPage: FC<{ reservationRequests: ReservationRequest[] }>
 
   return (
     <>
-      <ol>
-        {reservationRequests.map((reservationRequest: ReservationRequest, i: number) => {
-          const accommodation = accommodationsMap[reservationRequest.accomodationId];
-          reservationRequest.accommodation = accommodation?.title;
+      {reservationRequests.map((reservationRequest: ReservationRequest, i: number) => {
+        const accommodation = accommodationsMap[reservationRequest.accomodationId];
+        reservationRequest.accommodation = accommodation?.title;
 
-          return (
-            <ReservationRequestRow
-              reservationRequest={reservationRequest}
-              onDeleteClick={() => deleteRequestAction(reservationRequest.id)}
-              key={i}
-            />
-          );
-        })}
-      </ol>
+        return (
+          <ReservationRequestRow
+            reservationRequest={reservationRequest}
+            onDeleteClick={() => deleteRequestAction(reservationRequest.id)}
+            key={i}
+          />
+        );
+      })}
     </>
   );
 };

@@ -55,7 +55,7 @@ const ReservationRow: FC<{
           </div>
         </div>
 
-        <div className="w-[228px] h-[18px] pb-[10px] text-right text-gray-900 text-opacity-80 text-[12px] font-normal leading-normal">
+        <div className="w-52 h-[18px] pb-[10px] text-right text-gray-900 text-opacity-80 text-[12px] font-normal leading-normal">
           Created {moment(reservation.createdAt).fromNow()}
         </div>
       </div>

@@ -4,7 +4,6 @@ import { useRequestsResult } from "./useRequestsResult";
 import moment from "moment";
 import Link from "next/link";
 import { UserSpecific } from "../../core/components/UserSpecific";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { ReservationRequestStatus, type ReservationRequest } from "./ReservationRequestsModels";
 import { useAction } from "../../core/hooks/useAction";
 import { acceptReservationRequest, declineReservationRequest } from "./requestActions";
@@ -18,7 +17,6 @@ import { SelectAccomodation } from "../common/SelectAccommodation";
 import { useAccommodationsMap } from "../accommodations/useAccommodationsMap";
 import { statusToText } from "./utils";
 import { usePhotos } from "../accommodations/usePhotos";
-import { Button } from "../../core/components/Button";
 
 const ReservationRequestRow: FC<{
   reservationRequest: ReservationRequest;
@@ -52,11 +50,12 @@ const ReservationRequestRow: FC<{
                   </div>
                 </div>
               )}
-              <br />
-              Reservation by{" "}
-              <Link href={`/users/${reservationRequest.guestId}`}>
-                <span>{reservationRequest.guest}</span>
-              </Link>{" "}
+              <div className="self-stretch text-center text-gray-900 text-[16px] font-bold leading-normal">
+                Reservation by{" "}
+                <Link href={`/users/${reservationRequest.guestId}`}>
+                  <span>{reservationRequest.guest}</span>
+                </Link>{" "}
+              </div>
             </div>
             <div className="w-52 text-center text-zinc-800 text-[12px] font-normal leading-tight">
               {moment(reservationRequest.datePeriod.dateFrom).format("DD.MM.yyyy")} -{" "}
@@ -102,40 +101,6 @@ const ReservationRequestRow: FC<{
           )}
         </div>
       </div>
-      {/* <li className="mb-10">
-        <div className="py-2 px-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div className="flex min-w-full">
-            <div className="flex-grow space-y-2">
-              <p>
-                Reservation requested by{" "}
-                <Link href={`/users/${reservationRequest.guestId}`}>
-                  <span>{reservationRequest.guest}</span>
-                </Link>{" "}
-                for {reservationRequest.guestNumber}{" "}
-                {reservationRequest.guestNumber === 1 ? "guest" : "guests"} from{" "}
-                {new Date(reservationRequest.datePeriod.dateFrom).toDateString()} to{" "}
-                {new Date(reservationRequest.datePeriod.dateTo).toDateString()} (
-                {statusToText(reservationRequest.status)})
-              </p>
-              <p>Total price: {reservationRequest.totalPrice}$</p>
-              <p className="text-sm text-gray-700">
-                requested {moment(reservationRequest.createdAt).fromNow()}
-              </p>
-            </div>
-
-            {reservationRequest.status === ReservationRequestStatus.Waiting ? (
-              <UserSpecific userId={reservationRequest.hostId || ""}>
-                <div className="flex space-x-1 justify-end">
-                  <CheckCircleIcon className="inline-block h-5 w-5" onClick={onAcceptClick} />
-                  <XCircleIcon className="inline-block h-5 w-5" onClick={onDeclineClick} />
-                </div>
-              </UserSpecific>
-            ) : (
-              <></>
-            )}
-          </div>
-        </div>
-      </li> */}
     </>
   );
 };
@@ -158,6 +123,11 @@ const ReservationRequestsPage: FC<{ reservationRequests: ReservationRequest[] }>
     onSuccess: () => {
       notificationsService.success("You have successfully accepted reservation request.");
       setResult({ status: ResultStatus.Ok, type: "ACCEPT_RESERVATION_REQUEST" });
+      setTimeout(() => {
+        if (!setResult) return;
+
+        setResult({ status: ResultStatus.Ok, type: "REFRESH_RESERVATIONS" });
+      }, 150);
     },
     onError: (error: any) => {
       notificationsService.error(extractErrorMessage(error));
@@ -178,24 +148,22 @@ const ReservationRequestsPage: FC<{ reservationRequests: ReservationRequest[] }>
 
   return (
     <>
-      <ol>
-        {reservationRequests?.map((reservationRequest: ReservationRequest, i: number) => {
-          const guest = guestsMap[reservationRequest.guestId];
-          reservationRequest.guest = `${guest?.firstName} ${guest?.lastName}`;
+      {reservationRequests?.map((reservationRequest: ReservationRequest, i: number) => {
+        const guest = guestsMap[reservationRequest.guestId];
+        reservationRequest.guest = `${guest?.firstName} ${guest?.lastName}`;
 
-          const accommodation = accommodationsMap[reservationRequest.accomodationId];
-          reservationRequest.hostId = accommodation?.hostId;
+        const accommodation = accommodationsMap[reservationRequest.accomodationId];
+        reservationRequest.hostId = accommodation?.hostId;
 
-          return (
-            <ReservationRequestRow
-              reservationRequest={reservationRequest}
-              onAcceptClick={() => acceptRequestAction(reservationRequest.id)}
-              onDeclineClick={() => declineRequestAction(reservationRequest.id)}
-              key={i}
-            />
-          );
-        })}
-      </ol>
+        return (
+          <ReservationRequestRow
+            reservationRequest={reservationRequest}
+            onAcceptClick={() => acceptRequestAction(reservationRequest.id)}
+            onDeclineClick={() => declineRequestAction(reservationRequest.id)}
+            key={i}
+          />
+        );
+      })}
     </>
   );
 };
