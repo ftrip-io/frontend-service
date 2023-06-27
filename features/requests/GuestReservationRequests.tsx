@@ -14,46 +14,76 @@ import { ResultStatus } from "../../core/contexts/Result";
 import { extractErrorMessage } from "../../core/utils/errors";
 import { ReservationRequestsSearchForm } from "./ReservationRequestsSearchForm";
 import { statusToText } from "./utils";
+import { Button } from "../../core/components/Button";
+import { usePhotos } from "../accommodations/usePhotos";
 
 const ReservationRequestRow: FC<{
   reservationRequest: ReservationRequest;
   onDeleteClick: () => any;
 }> = ({ reservationRequest, onDeleteClick }) => {
+  const { photoUrls } = usePhotos(reservationRequest.accomodationId);
+
   return (
     <>
-      <li className="mb-10">
-        <div className="py-2 px-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div className="flex min-w-full">
-            <div className="flex-grow space-y-2">
-              <p>
-                Reservation requesting{" "}
-                <Link href={`/accommodations/${reservationRequest.accomodationId}`}>
-                  <span>{reservationRequest.accommodation}</span>
-                </Link>{" "}
-                for {reservationRequest.guestNumber}{" "}
-                {reservationRequest.guestNumber === 1 ? "guest" : "guests"} from{" "}
-                {new Date(reservationRequest.datePeriod.dateFrom).toDateString()} to{" "}
-                {new Date(reservationRequest.datePeriod.dateTo).toDateString()} (
-                {statusToText(reservationRequest.status)})
-              </p>
-              <p>Total price: {reservationRequest.totalPrice}$</p>
-              <p className="text-sm text-gray-700">
-                requested {moment(reservationRequest.createdAt).fromNow()}
-              </p>
-            </div>
-
-            {reservationRequest.status === ReservationRequestStatus.Waiting ? (
-              <UserSpecific userId={reservationRequest.guestId}>
-                <div className="space-x-2 justify-end">
-                  <XCircleIcon className="inline-block h-5 w-5" onClick={onDeleteClick} />
+      <div className="w-60 h-[390px] pb-[40px] bg-white rounded-2xl shadow flex-col justify-center items-center gap-4 inline-flex mb-4 m-1 mt-2">
+        <div className="w-60 h-[200px] shadow justify-center items-center inline-flex">
+          {photoUrls.length ? (
+            <img className="w-60 h-[200px]" src={photoUrls?.[0]} />
+          ) : (
+            <div className="w-60 h-[200px] bg-indigo-500 bg-opacity-80" />
+          )}
+        </div>
+        <div className="self-stretch h-[150px] px-4 pb-3 border-b flex-col justify-start items-center gap-3 flex">
+          <div className="self-stretch h-[135px] flex-col justify-center items-center gap-1.5 flex">
+            {reservationRequest.status == ReservationRequestStatus.Accepted ? (
+              <div className="w-[75px] h-[18px] px-5 py-3 ml-3 bg-green-200 rounded-lg justify-center items-center gap-[8px] inline-flex">
+                <div className="text-center text-white text-[14px] font-semibold leading-normal">
+                  Accepted
                 </div>
-              </UserSpecific>
+              </div>
             ) : (
-              <></>
+              <div className="w-[75px] h-[18px] px-5 py-3 ml-3 bg-amber-200 rounded-lg justify-center items-center gap-[8px] inline-flex">
+                <div className="text-center text-white text-[14px] font-semibold leading-normal">
+                  {statusToText(reservationRequest.status)}
+                </div>
+              </div>
             )}
+
+            <div className="self-stretch text-center text-gray-900 text-[24px] font-bold leading-normal">
+              <Link href={`/accommodations/${reservationRequest.accomodationId}`}>
+                <span>{reservationRequest.accommodation}</span>
+              </Link>
+            </div>
+            <div className="w-52 text-center text-zinc-800 text-[12px] font-normal leading-tight">
+              {moment(reservationRequest.datePeriod.dateFrom).format("DD.MM.yyyy")} -{" "}
+              {moment(reservationRequest.datePeriod.dateTo).format("DD.MM.yyyy")} <br />
+              {reservationRequest.guestNumber}{" "}
+              {reservationRequest.guestNumber === 1 ? "guest" : "guests"}{" "}
+            </div>
+            <div className="w-52 text-center">
+              <span className="text-black text-[14px] font-semibold leading-tight">
+                Total price: {reservationRequest.totalPrice}$
+              </span>
+            </div>
+            <div className="w-[228px] h-[18px] mt-2 text-right text-gray-900 text-opacity-80 text-[12px] font-normal leading-normal">
+              Created {moment(reservationRequest.createdAt).fromNow()}
+            </div>
           </div>
         </div>
-      </li>
+
+        {reservationRequest.status === ReservationRequestStatus.Waiting ? (
+          <div className="w-[75px] h-[20px] px-5 py-3 ml-3 bg-indigo-500 rounded-lg justify-center items-center gap-[6px] inline-flex">
+            <button
+              className="text-center text-white text-[14px] font-semibold leading-normal"
+              onClick={onDeleteClick}
+            >
+              Delete
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
     </>
   );
 };

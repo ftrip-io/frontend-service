@@ -17,15 +17,92 @@ import { useAccommodationsByHost } from "../accommodations/useAccommodations";
 import { SelectAccomodation } from "../common/SelectAccommodation";
 import { useAccommodationsMap } from "../accommodations/useAccommodationsMap";
 import { statusToText } from "./utils";
+import { usePhotos } from "../accommodations/usePhotos";
+import { Button } from "../../core/components/Button";
 
 const ReservationRequestRow: FC<{
   reservationRequest: ReservationRequest;
   onAcceptClick: () => any;
   onDeclineClick: () => any;
 }> = ({ reservationRequest, onAcceptClick, onDeclineClick }) => {
+  const { photoUrls } = usePhotos(reservationRequest.accomodationId);
   return (
     <>
-      <li className="mb-10">
+      <div className="w-60 h-[425px] pb-[20px] bg-white rounded-2xl shadow flex-col justify-center items-center gap-2 inline-flex m-1">
+        <div className="w-60 h-[200px] shadow justify-center items-center inline-flex">
+          {photoUrls.length ? (
+            <img className="w-60 h-[200px]" src={photoUrls?.[0]} />
+          ) : (
+            <div className="w-60 h-[200px] bg-indigo-500 bg-opacity-80" />
+          )}
+        </div>
+        <div className="self-stretch h-[180px] px-4 pb-3 border-b flex-col justify-start items-center gap-3 flex">
+          <div className="self-stretch h-[170px] flex-col justify-start items-start gap-1.5 flex">
+            <div className="self-stretch text-center text-gray-900 text-[16px] font-semibold leading-normal">
+              {reservationRequest.status == ReservationRequestStatus.Accepted ? (
+                <div className="w-[75px] h-[18px] px-5 py-3 ml-3 bg-green-200 rounded-lg justify-center items-center gap-[8px] inline-flex">
+                  <div className="text-center text-white text-[14px] font-semibold leading-normal">
+                    Accepted
+                  </div>
+                </div>
+              ) : (
+                <div className="w-[75px] h-[18px] px-5 py-3 ml-3 bg-amber-200 rounded-lg justify-center items-center gap-[8px] inline-flex">
+                  <div className="text-center text-white text-[14px] font-semibold leading-normal">
+                    {statusToText(reservationRequest.status)}
+                  </div>
+                </div>
+              )}
+              <br />
+              Reservation by{" "}
+              <Link href={`/users/${reservationRequest.guestId}`}>
+                <span>{reservationRequest.guest}</span>
+              </Link>{" "}
+            </div>
+            <div className="w-52 text-center text-zinc-800 text-[12px] font-normal leading-tight">
+              {moment(reservationRequest.datePeriod.dateFrom).format("DD.MM.yyyy")} -{" "}
+              {moment(reservationRequest.datePeriod.dateTo).format("DD.MM.yyyy")} <br />
+              {reservationRequest.guestNumber}{" "}
+              {reservationRequest.guestNumber === 1 ? "guest" : "guests"}{" "}
+            </div>
+            <div className="w-52 text-center">
+              <span className="text-gray-900 text-[12px] font-bold leading-tight">
+                Total price: {reservationRequest.totalPrice}$
+              </span>
+            </div>
+            <div className="w-52 h-[18px] text-right text-gray-900 text-opacity-80 mt-3 text-[12px] font-normal leading-normal">
+              Created {moment(reservationRequest.createdAt).fromNow()}
+            </div>
+          </div>
+        </div>
+
+        <div className="w-[228px] h-[18px] pb-[10px] text-right text-gray-900 text-opacity-80 text-[12px] font-normal leading-normal">
+          {reservationRequest.status === ReservationRequestStatus.Waiting ? (
+            <UserSpecific userId={reservationRequest.hostId || ""}>
+              <div className="flex space-x-1 justify-center">
+                <div className="w-[75px] h-[20px] px-5 py-3 ml-3 mb-2 bg-indigo-500 rounded-lg justify-center items-center gap-[8px] inline-flex">
+                  <button
+                    className="text-center text-white text-[14px] font-semibold leading-normal"
+                    onClick={onAcceptClick}
+                  >
+                    Accept
+                  </button>
+                </div>
+                <div className="w-[75px] h-[20px] px-5 py-3 ml-3 mb-2 bg-indigo-500 rounded-lg justify-center items-center gap-[8px] inline-flex">
+                  <button
+                    className="text-center text-white text-[14px] font-semibold leading-normal"
+                    onClick={onDeclineClick}
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            </UserSpecific>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
+      {/* <li className="mb-10">
         <div className="py-2 px-4 bg-white rounded-lg border border-gray-200 shadow-sm">
           <div className="flex min-w-full">
             <div className="flex-grow space-y-2">
@@ -58,7 +135,7 @@ const ReservationRequestRow: FC<{
             )}
           </div>
         </div>
-      </li>
+      </li> */}
     </>
   );
 };

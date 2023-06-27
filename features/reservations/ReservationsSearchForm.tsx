@@ -27,7 +27,7 @@ export const ReservationsSearchForm: FC<ReservationsSearchFormProps> = ({
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3 mb-4">
         <SelectOptionField
           label="Include"
           options={includeOptions}
