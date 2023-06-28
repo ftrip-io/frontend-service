@@ -1,9 +1,11 @@
 const nextConfig = {
   reactStrictMode: false,
   publicRuntimeConfig: {
-    imageServicePath: `http://${process.env.IMAGE_SERVICE_HOSTNAME || "localhost"}:${
-      process.env.IMAGE_SERVICE_PORT || "3001"
-    }${process.env.IMAGE_SERVICE_HOSTNAME ? "/photoService" : ""}`,
+    imageServicePath: `${process.env.IMAGE_SERVICE_PROTOCOL || "http"}://${
+      process.env.IMAGE_SERVICE_HOSTNAME || "localhost"
+    }:${process.env.IMAGE_SERVICE_PORT || "3001"}${
+      process.env.IMAGE_SERVICE_HOSTNAME ? "/photoService" : ""
+    }`,
   },
   output: "standalone",
   swcMinify: true,
@@ -36,7 +38,7 @@ const nextConfig = {
       },
     ];
   },
-  images: { domains: [process.env.IMAGE_SERVICE_HOSTNAME || "localhost"] },
+  images: { domains: [process.env.IMAGE_SERVICE_HOSTNAME || "localhost", "ftripio.isobarot.com"] },
 };
 
 module.exports = nextConfig;
